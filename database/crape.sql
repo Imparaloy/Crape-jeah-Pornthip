@@ -1,3 +1,4 @@
+
 -- 1. users (เก็บข้อมูลผู้ใช้)
 CREATE TABLE users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,

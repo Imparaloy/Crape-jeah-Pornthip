@@ -6,7 +6,19 @@ content: [
 	"./public/**/*.{html,js}"
 ],
 theme: {
-extend: {},
+extend: {
+	colors: {
+		verdantWhisper: "#4CAF50",   // Green
+		sunblink: "#FFFBBD",         // Yellow
+		amberFlame: "#FF9800",       // Orange
+		chiliPulse: "#CA3C25",       // SomSom
+		eclipseVoid: "#0A0A0A",      // Dark
+		moonMilk: "#F5F5F5",         // GAY
+		frostVeil: "#E0E0E0",        // Snow
+		goldenRelic: "#D4AF37",      // เหลืองอี๋นลี่
+		cloudLoom: "#F0F8FF",        // BG
+		},
+},
 },
 plugins: [],
 }

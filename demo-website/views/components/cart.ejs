@@ -1,0 +1,23 @@
+<!-- views/components/cart.ejs -->
+<div class="bg-white p-4 rounded-lg shadow-md">
+  <h2 class="text-xl font-bold mb-4">รายการที่สั่งซื้อ</h2>
+  <div class="space-y-4 min-h-[200px]">
+    <% if (cart && cart.length > 0) { %>
+      <% cart.forEach(item => { %>
+        <div class="flex justify-between items-center">
+          <div>
+            <h3 class="font-semibold"><%= item.name %></h3>
+            <p class="text-gray-600">฿<%= item.price %> x <%= item.quantity %></p>
+          </div>
+          <button 
+            onclick="removeFromCart('<%= item.id %>')"
+            class="text-red-700 hover:text-red-800">
+            ลบ
+          </button>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <p class="text-gray-500 text-center">ยังไม่มีรายการสั่งซื้อ</p>
+    <% } %>
+  </div>
+</div>

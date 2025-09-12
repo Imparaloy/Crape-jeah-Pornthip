@@ -1,11 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Demo Tailwind</title>
-    <link rel="stylesheet" href="/asset/tailwind.css" />
-  </head>
-  <body>
-    <div class="text-3xl font-bold text-teal-500">Hello Tailwind!</div>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>J' Pornthip - Home</title>
+  <link rel="stylesheet" href="/asset/tailwind.css">
+</head>
+<body class="bg-gray-50">
+  <%- include('components/navbar') %>
+
+  <main class="container mx-auto px-4 py-8">
+    <!-- Recommended Menu Section -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold mb-6">Recommended menu</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <% if (recommendedMenus && recommendedMenus.length > 0) { %>
+          <% recommendedMenus.forEach(menu => { %>
+            <div class="flex justify-center">
+              <%- include('components/menu-card', { menu }) %>
+            </div>
+          <% }) %>
+        <% } else { %>
+          <p class="text-gray-500">ไม่มีเมนูแนะนำในขณะนี้</p>
+        <% } %>
+      </div>
+    </section>
+
+    <!-- All Menu Section -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold mb-6">Menu</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <% if (menus && menus.length > 0) { %>
+          <% menus.forEach(menu => { %>
+            <div class="flex justify-center">
+              <%- include('components/menu-card', { menu }) %>
+            </div>
+          <% }) %>
+        <% } else { %>
+          <p class="text-gray-500">ไม่มีเมนูในขณะนี้</p>
+        <% } %>
+      </div>
+    </section>
+
+    <!-- Customize Section -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold mb-6">Customize crepe</h2>
+      <div class="bg-white rounded-2xl shadow-lg p-8 text-center hover:shadow-xl transition-shadow">
+        <div class="w-32 h-32 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-red-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+        </div>
+        <p class="text-gray-600 mb-6">สร้างเครปสไตล์คุณเอง</p>
+        <button class="bg-red-700 text-white px-8 py-3 rounded-lg hover:bg-red-800 transition-colors">
+          Start Customizing
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Fixed Cart Position -->
+  <div class="fixed top-24 right-4 w-80">
+    <%- include('components/cart', { cart: cart || [] }) %>
+  </div>
+
+  <script>
+    function addToCart(menuId) {
+      // Implement add to cart logic here
+      console.log('Adding to cart:', menuId);
+    }
+
+    function removeFromCart(menuId) {
+      // Implement remove from cart logic here
+      console.log('Removing from cart:', menuId);
+    }
+  </script>
+</body>
 </html>

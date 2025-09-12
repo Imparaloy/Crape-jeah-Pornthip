@@ -6,7 +6,11 @@ content: [
 	"./views/**/*.ejs"
 ],
 theme: {
-extend: {},
+extend: {
+	fontFamily: {
+        poppins: ["Poppins", "sans-serif"],
+      },
+	},
 },
 plugins: [],
 }

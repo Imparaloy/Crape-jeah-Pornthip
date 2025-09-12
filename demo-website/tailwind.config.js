@@ -8,9 +8,12 @@ content: [
 theme: {
 extend: {
 	fontFamily: {
-        poppins: ["Poppins", "sans-serif"],
+        poppins: ["Poppins", "system-ui", "sans-serif"],
       },
 	},
+	colors: {
+		tomato: "#CA3C25"
+    },
 },
 plugins: [],
 }

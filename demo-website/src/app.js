@@ -4,6 +4,7 @@ const app = express();
 
 // ตั้งค่า static ให้ public
 app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static('public'));
 
 // ตั้งค่า view engine เป็น ejs
 app.set('views', path.join(__dirname, '../views'));

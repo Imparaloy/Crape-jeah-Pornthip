@@ -1,19 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 export default {
 content: [
-	"./public/**/*.{html,js}",
+	"./views/**/*.ejs",
 	"./src/**/*.{js,ts}",
-	"./views/**/*.ejs"
+	"./public/**/*.{html,js}"
 ],
 theme: {
-extend: {
-	fontFamily: {
-        poppins: ["Poppins", "system-ui", "sans-serif"],
-      },
-	},
-	colors: {
-		tomato: "#CA3C25"
-    },
+extend: {},
 },
 plugins: [],
 }

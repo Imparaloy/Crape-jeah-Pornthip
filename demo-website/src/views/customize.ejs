@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customize | J' Pornthip</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#fff7ef] min-h-screen">
+  <%- include('components/navbar') %>
+  <main class="max-w-6xl mx-auto px-4 py-8">
+    <button onclick="history.back()" class="flex items-center text-red-700 hover:text-red-800 mb-6">
+      <span class="mr-2 text-xl">←</span> back
+    </button>
+
+    <div class="grid md:grid-cols-[1fr,2fr] gap-10">
+      <div class="flex flex-col items-center space-y-6">
+        <img src="/img/plate.png" alt="Crepe" class="w-64 h-64 object-contain rounded-full" />
+        <div class="flex items-center space-x-4">
+          <button id="qty-decrease" class="w-10 h-10 flex items-center justify-center bg-white border border-red-200 rounded-full text-red-700 text-xl">-</button>
+          <span id="qty-display" class="text-2xl font-semibold text-red-700">1</span>
+          <button id="qty-increase" class="w-10 h-10 flex items-center justify-center bg-white border border-red-200 rounded-full text-red-700 text-xl">+</button>
+        </div>
+      </div>
+
+      <div id="customize-form" class="space-y-8">
+        <div id="customize-groups" class="space-y-8"></div>
+
+        <div>
+          <label for="custom-note" class="block text-sm font-semibold text-gray-700 mb-2">โน้ตถึงร้านค้า</label>
+          <textarea id="custom-note" class="w-full rounded-xl border border-gray-200 px-4 py-3 focus:outline-none focus:border-red-400" rows="3" placeholder="E.g. ไม่ใส่ผัก"></textarea>
+        </div>
+
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+          <div>
+            <p class="text-sm text-gray-500">ราคารวมต่อชิ้น</p>
+            <p id="custom-price" class="text-3xl font-bold text-red-700">฿45</p>
+          </div>
+          <button id="add-custom-to-cart" class="flex items-center justify-center bg-red-700 text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-red-800 transition-colors">
+            Add to basket
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="/js/customize.js"></script>
+</body>
+</html>

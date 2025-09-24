@@ -39,6 +39,7 @@
     const payload = parseToken(token);
     if (!payload || !payload.name) {
       window.localStorage.removeItem('token');
+      window.localStorage.removeItem('user');
       loginLink.classList.remove('hidden');
       loginLink.style.display = 'inline-flex';
       userMenu.classList.add('hidden');
@@ -48,7 +49,17 @@
       return;
     }
 
-    usernameLabel.textContent = payload.name;
+    let displayName = payload.name;
+    try {
+      const storedUser = JSON.parse(window.localStorage.getItem('user'));
+      if (storedUser && storedUser.name) {
+        displayName = storedUser.name;
+      }
+    } catch (err) {
+      console.warn('Invalid stored user payload');
+    }
+
+    usernameLabel.textContent = displayName;
     loginLink.classList.add('hidden');
     loginLink.style.display = 'none';
     userMenu.classList.remove('hidden');
@@ -61,6 +72,7 @@
 
     logoutBtn.addEventListener('click', () => {
       window.localStorage.removeItem('token');
+      window.localStorage.removeItem('user');
       window.location.href = '/login';
     });
   };

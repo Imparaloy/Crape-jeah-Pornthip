@@ -3,7 +3,8 @@ import userController from "../controllers/userController.js"
 
 const useUserRoute = async (router) => {
   router.get('/user', authMiddleware("admin"), userController.getAllUsers)
-  router.get('/user/:id', userController.getUserById)
+  router.get('/user/:id', authMiddleware(), userController.getUserById)
+  router.get('/me', authMiddleware(), userController.getProfile)
   router.post('/register', userController.register)
   router.post('/login', userController.login)
 }

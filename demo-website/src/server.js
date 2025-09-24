@@ -64,6 +64,28 @@ app.get('/', async (req, res) => {
   }
 });
 
+app.get('/order', async (req, res) => {
+  try {
+    const menus = await menuService.list();
+    res.render('order', { title: 'Order', menus });
+  } catch (error) {
+    console.error('Error rendering order page:', error);
+    res.render('order', { title: 'Order', menus: [] });
+  }
+});
+
+app.get('/customize', (req, res) => {
+  res.render('customize', { title: 'Customize' });
+});
+
+app.get('/status', (req, res) => {
+  res.render('status', { title: 'Status' });
+});
+
+app.get(['/profile', '/profile/:userId'], (req, res) => {
+  res.render('profile', { title: 'Profile' });
+});
+
 app.get('/login', (req, res) => {
   res.render('login', { title: 'Login' });
 });

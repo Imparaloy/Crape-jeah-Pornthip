@@ -1,6 +1,5 @@
 const express = require('express');
 const path = require('path');
-const connectDB = require('./config/db');
 require('dotenv').config();
 
 // Import routes
@@ -10,8 +9,7 @@ const errorHandler = require('./middlewares/errorHandler');
 
 const app = express();
 
-// Connect to MongoDB
-connectDB();
+// Note: DB connection is initialized in server.js before app.listen
 
 // Middleware
 app.use(express.json());

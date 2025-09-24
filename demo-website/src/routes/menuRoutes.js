@@ -1,16 +1,21 @@
-const express = require('express');
-const router = express.Router();
-const menuController = require('../controllers/menuController');
-const asyncHandler = require('../middlewares/asyncHandler');
+import authMiddleware from '../middlewares/authMiddleware.js';
+import menuController from '../controllers/menuController.js';
 
-// Get homepage with menus
-router.get('/', asyncHandler(menuController.renderHome));
+const useMenuRoute = async (router) => {
+  // public list / get
+  router.get('/menus', menuController.list);
+  router.get('/menus/:id', menuController.get);
 
-// API Routes
-router.post('/api/menus', asyncHandler(menuController.createMenu));
-router.get('/api/menus', asyncHandler(menuController.getMenus));
-router.get('/api/menus/recommended', asyncHandler(menuController.getRecommendedMenus));
-router.put('/api/menus/:id', asyncHandler(menuController.updateMenu));
-router.delete('/api/menus/:id', asyncHandler(menuController.deleteMenu));
+  // seller can manage menu
+  router.post('/menus', authMiddleware('seller'), menuController.create);
+  router.put('/menus/:id', authMiddleware('seller'), menuController.update);
+  router.delete('/menus/:id', authMiddleware('seller'), menuController.remove);
 
-module.exports = router;
+  // example: recommended list (เหมือนของเดิม)
+  router.get('/menus-recommended', async (req, res) => {
+    req.query.recommended = 'true';
+    return menuController.list(req, res);
+  });
+};
+
+export default useMenuRoute;

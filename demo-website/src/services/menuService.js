@@ -1,33 +1,11 @@
-const Menu = require('../models/menu');
+import Menu from '../models/menu.js';
 
-// Business logic for menus
-const fetchAllMenus = async () => {
-  return await Menu.find({ isAvailable: true });
+const menuService = {
+  list: async (filter = {}, options = {}) => Menu.find(filter, null, options),
+  getById: async (id) => Menu.findById(id),
+  create: async (payload) => Menu.create(payload),
+  update: async (id, payload) => Menu.findByIdAndUpdate(id, payload, { new: true }),
+  remove: async (id) => Menu.findByIdAndDelete(id),
 };
 
-const fetchRecommendedMenus = async () => {
-  return await Menu.find({ isRecommended: true, isAvailable: true });
-};
-
-const createMenu = async (menuData) => {
-  const menu = new Menu(menuData);
-  await menu.save();
-  return menu;
-};
-
-const updateMenu = async (id, menuData) => {
-  return await Menu.findByIdAndUpdate(id, menuData, { new: true });
-};
-
-const deleteMenu = async (id) => {
-  await Menu.findByIdAndDelete(id);
-  return { message: 'Menu deleted successfully' };
-};
-
-module.exports = {
-  fetchAllMenus,
-  fetchRecommendedMenus,
-  createMenu,
-  updateMenu,
-  deleteMenu,
-};
+export default menuService;

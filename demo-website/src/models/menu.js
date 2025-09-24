@@ -1,55 +1,13 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-const menuSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, 'Menu name is required'],
-    trim: true
-  },
-  description: {
-    type: String,
-    required: [true, 'Menu description is required'],
-    trim: true
-  },
-  price: {
-    type: Number,
-    required: [true, 'Price is required'],
-    min: [0, 'Price cannot be negative']
-  },
-  image: {
-    type: String,
-    required: [true, 'Image URL is required']
-  },
-  isRecommended: {
-    type: Boolean,
-    default: false
-  },
-  category: {
-    type: String,
-    required: [true, 'Category is required'],
-    enum: ['sweet', 'savory', 'custom'],
-    default: 'sweet'
-  },
-  isAvailable: {
-    type: Boolean,
-    default: true
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
-  }
-});
+const MenuSchema = new mongoose.Schema({
+  name: { type: String, required: true, trim: true },
+  description: String,
+  price: { type: Number, required: true, min: 0 },
+  imageUrl: String,
+  isRecommended: { type: Boolean, default: false },
+  available: { type: Boolean, default: true }
+}, { timestamps: true });
 
-// Update the updatedAt timestamp before saving
-menuSchema.pre('save', function(next) {
-  this.updatedAt = Date.now();
-  next();
-});
-
-const Menu = mongoose.model('Menu', menuSchema);
-
-module.exports = Menu;
+const Menu = mongoose.model('Menu', MenuSchema);
+export default Menu;

@@ -1,53 +1,15 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-const cartItemSchema = new mongoose.Schema({
-  menu: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Menu',
-    required: true
-  },
-  quantity: {
-    type: Number,
-    required: true,
-    min: [1, 'Quantity must be at least 1']
-  },
-  customizations: [{
-    type: String
-  }],
-  price: {
-    type: Number,
-    required: true
-  }
-});
+const CartItemSchema = new mongoose.Schema({
+  menuId: { type: mongoose.Schema.Types.ObjectId, ref: 'Menu', required: true },
+  qty: { type: Number, default: 1, min: 1 },
+  note: String
+}, { _id: false });
 
-const cartSchema = new mongoose.Schema({
-  userId: {
-    type: String,
-    required: true
-  },
-  items: [cartItemSchema],
-  totalAmount: {
-    type: Number,
-    required: true,
-    default: 0
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
-  }
-});
+const CartSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', index: true },
+  items: { type: [CartItemSchema], default: [] }
+}, { timestamps: true });
 
-// Calculate total amount before saving
-cartSchema.pre('save', function(next) {
-  this.totalAmount = this.items.reduce((total, item) => total + (item.price * item.quantity), 0);
-  this.updatedAt = Date.now();
-  next();
-});
-
-const Cart = mongoose.model('Cart', cartSchema);
-
-module.exports = Cart;
+const Cart = mongoose.model('Cart', CartSchema);
+export default Cart;

@@ -1,21 +1,12 @@
-const express = require('express');
-const router = express.Router();
-const cartController = require('../controllers/cartController');
-const asyncHandler = require('../middlewares/asyncHandler');
+import authMiddleware from '../middlewares/authMiddleware.js';
+import cartController from '../controllers/cartController.js';
 
-// Get cart
-router.get('/api/cart', asyncHandler(cartController.getCart));
+const useCartRoute = async (router) => {
+  router.get('/cart', authMiddleware(), cartController.getMine);
+  router.post('/cart/items', authMiddleware(), cartController.addItem);
+  router.put('/cart/items/:itemMenuId', authMiddleware(), cartController.updateItem);
+  router.delete('/cart/items/:itemMenuId', authMiddleware(), cartController.removeItem);
+  router.post('/cart/clear', authMiddleware(), cartController.clear);
+};
 
-// Add item to cart
-router.post('/api/cart/add', asyncHandler(cartController.addToCart));
-
-// Remove item from cart
-router.delete('/api/cart/remove/:menuId', asyncHandler(cartController.removeFromCart));
-
-// Update item quantity
-router.put('/api/cart/update/:menuId', asyncHandler(cartController.updateCartItemQuantity));
-
-// Clear cart
-router.delete('/api/cart/clear', asyncHandler(cartController.clearCart));
-
-module.exports = router;
+export default useCartRoute;

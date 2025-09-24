@@ -5,13 +5,15 @@
     <title>Demo Tailwind</title>
     <link rel="stylesheet" href="/asset/tailwind.css" />
   </head>
-  <body>
+  <body class="bg-cloudLoom">
 
-    <%- include('./components/navbar.ejs') %>
+    <% if (isLogin) { %>
+      <%- include('./components/login-Admin.ejs') %>
+    <% } else { %>
+      <%- include('./components/navbar.ejs') %>
+    <% } %>
 
-    <div class="font-poppins text-3xl font-bold text-orange-500 ">Hello Tailwind!</div>
-
-    <div class="text-3xl font-bold text-blue-500">Hello Tailwind!</div>
+    <%- include('./components/Order.ejs', { orders: orders, counters: counters, activeTab: activeTab }) %>
 
   </body>
 </html>

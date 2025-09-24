@@ -16,7 +16,7 @@ extend: {
 		moonMilk: "#F5F5F5",         // GAY
 		frostVeil: "#E0E0E0",        // Snow
 		goldenRelic: "#D4AF37",      // เหลืองอี๋นลี่
-		cloudLoom: "#F0F8FF",        // BG
+		cloudLoom: "#FFF8F0",        // BG
 		},
 },
 },

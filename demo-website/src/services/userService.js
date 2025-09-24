@@ -1,12 +1,14 @@
-import User from '../models/User.js';
+import User from "../models/User.js";
 
-const userService = {
-  getAllUsers: async () => User.find(),
-  getUserById: async (id) => User.findById(id),
-  getByUsername: async (name) => User.findOne({ name }),
-  create: async (name, password, age, phone, role = 'user') => {
-    return User.create({ name, password, age, phone, role });
-  }
+const getAllUsers = () => User.find();
+const getUserById = (id) => User.findById(id);
+const getByUsername = (name) => User.findOne({ name });
+const create = ({ name, password, age, phone }) =>
+  User.create({ name, password, age, phone });
+
+export default {
+  getAllUsers,
+  getUserById,
+  getByUsername,
+  create,
 };
-
-export default userService;

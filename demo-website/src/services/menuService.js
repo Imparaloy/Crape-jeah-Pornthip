@@ -1,11 +1,9 @@
-import Menu from '../models/menu.js';
+import Menu from "../models/Menu.js";
 
-const menuService = {
-  list: async (filter = {}, options = {}) => Menu.find(filter, null, options),
-  getById: async (id) => Menu.findById(id),
-  create: async (payload) => Menu.create(payload),
-  update: async (id, payload) => Menu.findByIdAndUpdate(id, payload, { new: true }),
-  remove: async (id) => Menu.findByIdAndDelete(id),
+export default {
+  list: (filter = {}, options = {}) => Menu.find(filter, null, options),
+  get: (id) => Menu.findById(id),
+  create: (payload) => Menu.create(payload),
+  update: (id, payload) => Menu.findByIdAndUpdate(id, payload, { new: true }),
+  remove: (id) => Menu.findByIdAndDelete(id),
 };
-
-export default menuService;

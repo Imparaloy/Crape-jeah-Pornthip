@@ -1,0 +1,20 @@
+<!-- views/components/navbar.ejs -->
+<nav class="bg-red-700 p-4">
+  <div class="container mx-auto flex justify-between items-center">
+    <div class="flex items-center">
+    <span class="text-white text-xl font-bold mr-2">J'Pornthip</span>
+    </div>
+    <div class="flex items-center space-x-4">
+      <a href="/" class="text-white hover:text-yellow-200">Home</a>
+      <a href="/order" class="text-white hover:text-yellow-200">Order</a>
+      <a href="/status" class="text-white hover:text-yellow-200">Status</a>
+      <a id="nav-login" href="/login" class="hidden bg-yellow-100 text-red-700 px-4 py-2 rounded-lg hover:bg-yellow-200">login / sign up</a>
+      <div id="nav-user-menu" class="hidden items-center space-x-3">
+        <span class="text-white">Hi, <span id="nav-username" class="font-semibold"></span></span>
+        <a id="nav-profile" href="/profile" class="bg-white text-red-700 px-4 py-2 rounded-lg hover:bg-yellow-100">Profile</a>
+        <button id="nav-logout" class="bg-yellow-100 text-red-700 px-4 py-2 rounded-lg hover:bg-yellow-200">Logout</button>
+      </div>
+    </div>
+  </div>
+</nav>
+<script src="/js/auth.js"></script>

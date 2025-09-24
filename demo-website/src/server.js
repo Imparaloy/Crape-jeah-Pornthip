@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import mongoose from 'mongoose';
 import router from './routes/router.js';
+import menuService from './services/menuService.js';
 
 dotenv.config();
 
@@ -23,16 +24,54 @@ await connect();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// เสิร์ฟ EJS ถ้าคุณยังใช้หน้า view
 import path from 'path';
 import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const publicDir = path.join(__dirname, '..', 'public');
+const viewsDir = path.join(__dirname, 'views');
+
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-app.use(express.static(path.join(__dirname, 'public')));
+app.set('views', viewsDir);
+app.use(express.static(publicDir));
+
+app.get('/js/auth.js', (req, res) => {
+  res.type('application/javascript');
+  res.sendFile(path.join(publicDir, 'js/auth.js'));
+});
 
 app.use('/api', router);
 
+app.get('/', async (req, res) => {
+  try {
+    const [menus, recommendedMenus] = await Promise.all([
+      menuService.list(),
+      menuService.list({ isRecommended: true })
+    ]);
+    res.render('index', {
+      title: 'Home',
+      menus,
+      recommendedMenus,
+      cart: []
+    });
+  } catch (error) {
+    console.error('Error rendering home page:', error);
+    res.render('index', {
+      title: 'Home',
+      menus: [],
+      recommendedMenus: [],
+      cart: []
+    });
+  }
+});
+
+app.get('/login', (req, res) => {
+  res.render('login', { title: 'Login' });
+});
+
+app.get('/register', (req, res) => {
+  res.render('register', { title: 'Register' });
+});
+
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`Server running at: http://localhost:${port}`);
 });

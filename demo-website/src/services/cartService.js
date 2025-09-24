@@ -1,4 +1,4 @@
-import Cart from '../models/cart.js';
+import Cart from '../models/Cart.js';
 
 const cartService = {
   getMine: async (userId) => Cart.findOne({ userId }),

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Sign up | Crape Jeah Pornthip</title>
+  <link rel="stylesheet" href="/css/auth.css"/>
+  <script>
+    if (window.localStorage.getItem('token')) {
+      window.location.href = '/';
+    }
+  </script>
+</head>
+<body>
+  <div class="auth-wrap">
+    <div class="auth-title">Sign up</div>
+
+    <section class="auth-card">
+      <aside class="brand">
+        <img src="/img/crepe.png" alt="crepe"/>
+        <h1>
+          <div class="brand-line1">Crape</div>
+          <div class="brand-line2">Jeah Pornthip</div>
+        </h1>
+      </aside>
+
+      <main class="panel">
+        <div class="form-box">
+          <h2>Sign up</h2>
+
+          <label class="label">Account Name</label>
+          <input id="name" class="input" placeholder="your username" required />
+
+          <label class="label">Phone (optional)</label>
+          <input id="phone" class="input" placeholder="your phone number" />
+
+          <label class="label">Password</label>
+          <input id="password" type="password" class="input" placeholder="••••••••" required />
+
+          <button id="saveBtn" class="btn">Save</button>
+
+          <p class="link">
+            <a href="/login">Login</a>
+          </p>
+        </div>
+      </main>
+    </section>
+  </div>
+
+  <script>
+    document.getElementById('saveBtn').addEventListener('click', async () => {
+      const body = {
+        name: document.getElementById('name').value.trim(),
+        password: document.getElementById('password').value,
+        role: 'user'
+      };
+      if(!body.name || !body.password){ return alert('กรอกข้อมูลให้ครบ'); }
+
+      try{
+        const res = await fetch('/api/register', {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        if(!res.ok) throw new Error(data.message || 'Register failed');
+
+        alert('สมัครสำเร็จ!');
+        location.href = '/login';
+      }catch(err){
+        alert(err.message);
+      }
+    });
+  </script>
+</body>
+</html>

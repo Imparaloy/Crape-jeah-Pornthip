@@ -64,14 +64,8 @@ app.get('/', async (req, res) => {
   }
 });
 
-app.get('/order', async (req, res) => {
-  try {
-    const menus = await menuService.list();
-    res.render('order', { title: 'Order', menus });
-  } catch (error) {
-    console.error('Error rendering order page:', error);
-    res.render('order', { title: 'Order', menus: [] });
-  }
+app.get('/order', (req, res) => {
+  res.render('order', { title: 'Order' });
 });
 
 app.get('/customize', (req, res) => {

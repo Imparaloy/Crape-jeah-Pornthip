@@ -1,37 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Order | J' Pornthip</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body class="min-h-screen bg-[#fdf4ee] text-gray-800">
   <%- include('components/navbar') %>
-  <main class="container mx-auto px-4 py-10">
-    <section class="mb-10">
-      <h1 class="text-3xl font-bold text-red-700 mb-6">เลือกเมนูที่คุณชอบ</h1>
-      <div class="mb-6">
-        <a href="/customize" class="inline-flex items-center bg-red-100 text-red-700 px-5 py-2 rounded-full hover:bg-red-200 transition-colors">สร้างเครปของคุณเอง</a>
-      </div>
-      <% if (menus && menus.length) { %>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <% menus.forEach(menu => { %>
-            <div class="bg-white rounded-xl shadow p-6 flex flex-col justify-between">
-              <div>
-                <h2 class="text-xl font-semibold text-gray-800"><%= menu.name %></h2>
-                <p class="text-gray-500 mt-2"><%= menu.description || 'อร่อยทุกคำ' %></p>
-                <p class="text-red-700 font-bold text-lg mt-4">฿<%= menu.price %></p>
-              </div>
-              <button data-menu-id="<%= menu.id %>" class="mt-6 bg-red-700 text-white py-2 rounded-lg hover:bg-red-800 transition-colors add-to-cart">เพิ่มลงตะกร้า</button>
-            </div>
-          <% }) %>
+  <main class="mx-auto w-full max-w-6xl px-4 py-10 lg:py-16">
+    <div id="cart-alert" class="hidden mb-6 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-red-700"></div>
+    <div class="grid gap-12 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
+      <section>
+        <h1 class="mb-6 text-3xl font-semibold text-gray-900">รายการคำสั่งซื้อ</h1>
+        <div id="cart-loading" class="flex items-center gap-3 rounded-2xl bg-white px-6 py-5 shadow-md">
+          <span class="h-3 w-3 animate-pulse rounded-full bg-red-500"></span>
+          <span class="text-sm text-gray-500">กำลังโหลดรายการในตะกร้า...</span>
         </div>
-      <% } else { %>
-        <p class="text-gray-500">ไม่มีเมนูในขณะนี้</p>
-      <% } %>
-    </section>
+        <div id="cart-empty" class="hidden rounded-2xl bg-white px-6 py-16 text-center text-gray-500 shadow-md">
+          <p class="text-lg font-medium">ยังไม่มีรายการสั่งซื้อ</p>
+          <p class="mt-2 text-sm">เลือกเมนูจากหน้าแรกหรือสร้างเครปของคุณเองได้เลย!</p>
+          <div class="mt-6 flex flex-wrap items-center justify-center gap-4 text-sm">
+            <a href="/" class="rounded-full bg-red-600 px-5 py-2 font-medium text-white transition hover:bg-red-700">กลับสู่หน้าแรก</a>
+            <a href="/customize" class="rounded-full border border-red-600 px-5 py-2 font-medium text-red-600 transition hover:bg-red-50">สร้างเครปของคุณเอง</a>
+          </div>
+        </div>
+        <div id="cart-items" class="hidden space-y-5"></div>
+      </section>
+      <aside id="cart-summary" class="hidden self-start rounded-3xl bg-white p-8 shadow-lg">
+        <h2 class="text-xl font-semibold text-gray-900">Order information</h2>
+        <dl class="mt-6 space-y-3 text-sm">
+          <div class="flex justify-between text-gray-600">
+            <dt>Sub-Total</dt>
+            <dd id="summary-subtotal">-</dd>
+          </div>
+          <div class="flex justify-between text-gray-600">
+            <dt>Taxes &amp; Charges</dt>
+            <dd id="summary-tax">-</dd>
+          </div>
+        </dl>
+        <div class="mt-6 flex items-center justify-between text-lg font-semibold text-gray-900">
+          <span>Total</span>
+          <span id="summary-total">-</span>
+        </div>
+        <button id="order-now" class="mt-8 w-full rounded-full bg-red-600 py-3 text-white transition hover:bg-red-700 disabled:pointer-events-none disabled:opacity-50">Order Now</button>
+        <p id="checkout-helper" class="mt-3 text-xs text-gray-400">กรุณาเข้าสู่ระบบและเลือกเมนูเพื่อสั่งซื้อ</p>
+      </aside>
+    </div>
   </main>
-  <script src="/js/order.js"></script>
+  <script src="/js/order.js" defer></script>
 </body>
 </html>

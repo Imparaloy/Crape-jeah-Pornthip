@@ -52,4 +52,37 @@ app.get("/orders", (req, res) => {
   });
 });
 
+// Sales
+app.get("/sales", (req, res) => {
+  const allOrders = [
+    { id: "001", time: "09:30", price: 999.99, base: "แป้งชาเขียว",
+      ingredients: ["แยมบลูเบอร์รี่","ไส้กรอกไก่","แฮมไก่","ช็อคโกแลต"], status: "Served" },
+    { id: "002", time: "09:30", price: 55.55, base: "แป้งชาเขียว",
+      ingredients: ["แยมบลูเบอร์รี่","ไส้กรอกไก่","แฮมไก่","ช็อคโกแลต"], status: "Served" }
+  ];
+
+  const total = allOrders.length;
+  const inProcess = allOrders.filter(o => o.status === "In Process").length;
+  const served = allOrders.filter(o => o.status === "Served").length;
+
+  const status = (req.query.status || "all");
+  let filtered;
+  if (status === "in") {
+    filtered = allOrders.filter(o => o.status === "In Process");
+  } else if (status === "served") {
+    filtered = allOrders.filter(o => o.status === "Served");
+  } else {
+    filtered = allOrders;
+  }
+
+
+  res.render("index", {
+    isLogin: true,
+    username: "Porntip",
+    orders: filtered,
+    counters: { total, inProcess, served },
+    activeTab: status
+  });
+});
+
 module.exports = app;

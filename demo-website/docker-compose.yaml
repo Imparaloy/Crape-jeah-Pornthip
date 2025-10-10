@@ -1,12 +1,17 @@
 version: '3.8'
 services:
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.dev   # สร้างตามที่ให้ไปก่อนหน้า
     ports:
       - "3000:3000"
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=1
+      - WATCHPACK_POLLING=true
+      - TZ=Asia/Bangkok
     volumes:
-      - .:/app
-      - /app/node_modules
-    command: npm run start
+      - .:/app              # โค้ดจากเครื่อง
+      - /app/node_modules   # กันไม่ให้โดนทับ
+    command: npm run dev    # ต้องมี nodemon + tailwind --watch

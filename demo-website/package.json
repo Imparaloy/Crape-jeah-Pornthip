@@ -6,9 +6,7 @@
     "start": "node src/server.js",
     "dev": "concurrently \"npm:watch:tailwind\" \"nodemon src/server.js\"",
     "watch:tailwind": "npx tailwindcss -i ./src/styles/tailwind.css -o ./public/asset/tailwind.css --watch",
-    "build:tailwind": "npx tailwindcss -i ./src/styles/tailwind.css -o ./public/asset/tailwind.css --minify",
-    "seed": "node src/scripts/seed.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build:tailwind": "npx tailwindcss -i ./src/styles/tailwind.css -o ./public/asset/tailwind.css --minify"
   },
   "keywords": [],
   "author": "",

@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import router from './routes/router.js';
 import menuService from './services/menuService.js';
 import Order from './models/Order.js';
+import salesRouter from './routes/salesRoutes.js';
 
 dotenv.config();
 
@@ -78,6 +79,8 @@ app.get('/order', async (req, res) => {
     res.render('order', { title: 'Order', menus: [] });
   }
 });
+
+app.use('/sales', salesRouter);
 
 app.get('/customize', (req, res) => {
   res.render('customize', { title: 'Customize' });

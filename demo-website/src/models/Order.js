@@ -38,21 +38,10 @@ const OrderSchema = new mongoose.Schema(
     totalPrice: { type: Number, required: true, min: 0 },
     status: {
       type: String,
-      enum: ["pending", "paid", "preparing", "completed", "cancelled"],
+      enum: ["pending", "preparing", "completed"],
       default: "pending",
     },
-    paymentStatus: {
-      type: String,
-      enum: ["unpaid", "paid", "refunded"],
-      default: "unpaid",
-    },
-    paymentMethod: {
-      type: String,
-      enum: ["cash", "transfer", "card"],
-      default: "cash",
-    },
     note: String,
-    address: String,
   },
   { timestamps: true }
 );

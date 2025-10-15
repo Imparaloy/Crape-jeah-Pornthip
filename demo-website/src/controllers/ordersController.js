@@ -56,6 +56,10 @@ const ordersController = {
     try {
       const { id } = req.params;
       const { status } = req.body;
+      const allowed = ['pending', 'preparing', 'completed'];
+      if (!allowed.includes(status)) {
+        return res.status(400).json({ message: 'สถานะไม่ถูกต้อง' });
+      }
       const updated = await orderService.updateStatus(id, status);
       if (!updated) return res.status(404).json({ message: 'ไม่พบออเดอร์' });
       res.status(200).json(updated);

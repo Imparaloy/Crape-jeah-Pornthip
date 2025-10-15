@@ -60,8 +60,6 @@ document.addEventListener('DOMContentLoaded', async () => {
           pending: { text: 'รอดำเนินการ', cls: ['bg-yellow-100','text-yellow-800'] },
           preparing: { text: 'กำลังทำ', cls: ['bg-blue-100','text-blue-800'] },
           completed: { text: 'เสร็จแล้ว', cls: ['bg-green-100','text-green-800'] },
-          cancelled: { text: 'ยกเลิก', cls: ['bg-red-100','text-red-800'] },
-          paid: { text: 'ชำระเงินแล้ว', cls: ['bg-emerald-100','text-emerald-800'] }
         };
         const m = map[order.status] || map.pending;
         statusEl.textContent = `สถานะ: ${m.text}`;

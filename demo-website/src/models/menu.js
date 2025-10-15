@@ -16,4 +16,4 @@ const MenuSchema = new mongoose.Schema(
 );
 
 MenuSchema.index({ name: "text" });
-export default mongoose.model("Menu", MenuSchema);
+export default mongoose.models.Menu || mongoose.model("Menu", MenuSchema);

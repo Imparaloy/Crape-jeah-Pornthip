@@ -5,6 +5,7 @@ import router from './routes/router.js';
 import menuService from './services/menuService.js';
 import Order from './models/Order.js';
 import salesRouter from './routes/salesRoutes.js';
+import ordersAdminRouter from './routes/ordersAdminRoutes.js';
 
 dotenv.config();
 
@@ -22,7 +23,6 @@ const connect = async () => {
   }
 };
 await connect();
-app.use(router);
 
 
 app.use(express.json());
@@ -45,6 +45,10 @@ app.get('/js/auth.js', (req, res) => {
   res.sendFile(path.join(publicDir, 'js/auth.js'));
 });
 
+// Admin pages (SSR)
+app.use('/', ordersAdminRouter);
+
+// Public API endpoints
 app.use('/api', router);
 
 app.get('/', async (req, res) => {

@@ -70,24 +70,6 @@
     </div>
   </div>
 
-  <!-- Topping -->
-  <div class="bg-[#FFFCFF] rounded-2xl border-2 border-[#F5D6B0] p-8 pb-10">
-    <div class="flex items-center justify-between mb-8 mt-2">
-      <h2 class="text-3xl font-bold">Topping</h2>
-      <span class="text-xl font-bold">Total Price</span>
-    </div>
-
-    <div class="space-y-3 text-stone-800">
-      <% bestToppings.forEach(top => { %>
-        <div class="flex justify-between font-semibold">
-          <span><%= top.name %></span>
-          <span><%= top.total_price.toFixed(2) %></span>
-        </div>
-      <% }) %>
-    </div>
-  </div>
-</div>
-
 <!--  <h1 class="text-3xl font-bold mb-2 mt-10">Sales Dashboard</h1><br>
 
 <div class="bg-[#FFFCFF] rounded-2xl border-2 border-[#F5D6B0] p-8 pb-10">

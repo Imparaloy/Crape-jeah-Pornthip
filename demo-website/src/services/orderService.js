@@ -6,13 +6,13 @@ const orderService = {
     const orders = await Order.find({ userId })
       .sort({ createdAt: -1 })
       .limit(limit)
-      .populate('items.productId', 'name')
+      .populate('items.productId', 'name description')
       .lean();
     return orders.map(normalizeOrderForDisplay);
   },
   get: async (id) => {
     const order = await Order.findById(id)
-      .populate('items.productId', 'name')
+      .populate('items.productId', 'name description')
       .lean();
     if (!order) return order;
     return normalizeOrderForDisplay(order);
@@ -22,7 +22,7 @@ const orderService = {
   getLatest: async (userId) => {
     const order = await Order.findOne({ userId })
       .sort({ createdAt: -1 })
-      .populate('items.productId', 'name')
+      .populate('items.productId', 'name description')
       .lean();
     if (!order) return order;
     return normalizeOrderForDisplay(order);
@@ -86,7 +86,7 @@ const orderService = {
         ? i.custom.options
             .map((op) => `${op.group}: ${op.name}${op.price ? ` (+${op.price}฿)` : ''}`)
             .join(', ')
-        : (i?.note || '');
+        : (i?.note || menuDoc?.description || '');
 
       return {
         productId: isCustom ? undefined : (i?.menuId?._id || i?.menuId),
@@ -117,7 +117,10 @@ function normalizeOrderForDisplay(order) {
     const resolvedName = (!isPlaceholder)
       ? it.nameSnap
       : (product && typeof product === 'object' && product.name) ? product.name : (it.nameSnap || 'เมนู');
-    return { ...it, nameSnap: resolvedName };
+    const resolvedDetails = (it.detailsSnap && String(it.detailsSnap).trim() !== '' && it.detailsSnap !== '-')
+      ? it.detailsSnap
+      : ((product && typeof product === 'object' && product.description) ? product.description : it.detailsSnap);
+    return { ...it, nameSnap: resolvedName, detailsSnap: resolvedDetails };
   });
   return clone;
 }

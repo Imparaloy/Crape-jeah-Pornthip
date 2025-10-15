@@ -39,14 +39,13 @@
   <script>
     document.getElementById('saveBtn').addEventListener('click', async () => {
       const name = document.getElementById('name').value.trim();
-      const phone = document.getElementById('phone').value.trim();
       const password = document.getElementById('password').value;
 
       if (!name || !password) {
         return alert('กรอกข้อมูลให้ครบ');
       }
 
-      const payload = { name, password, phone, role: 'customer' };
+      const payload = { name, password, role: 'customer' };
 
       try {
         const res = await fetch('/api/register', {

@@ -5,6 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>J' Pornthip - Home</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+  // หากมี token ใน localStorage ให้เช็กสิทธิ์ แล้วพาไปหลังร้านอัตโนมัติ
+  (async () => {
+    const token = localStorage.getItem('token');
+    if (!token) return; // ยังไม่ล็อกอิน => อยู่หน้า user ต่อ
+
+    try {
+      const res = await fetch('/api/me', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      if (!res.ok) return; // token ไม่ถูก/หมดอายุ => ไม่เด้ง
+
+      const data = await res.json();
+      const role = data?.user?.role;
+
+      if (role === 'seller' || role === 'admin') {
+        // เปลี่ยนหน้าโดยไม่ยัดประวัติ (กด back จะไม่วน)
+        location.replace('/orders');
+      }
+    } catch (e) {
+      // เงียบไว้เพื่อไม่รบกวน UX หน้าแรก
+      console.debug('role check skipped:', e);
+    }
+  })();
+</script>
+
 </head>
 <body class="bg-gray-50">
   <%- include('components/navbar') %>

@@ -1,45 +1,48 @@
-<nav class="w-full bg-[#CA3C25] rounded-sm">
+<%
+  const _activePath = typeof activePath !== 'undefined' ? activePath : '';
+  const _me = typeof me !== 'undefined' ? me : null;
   
-  <div class="relative mx-auto max-w-[1200px] h-20 px-5 flex items-center justify-between">
+  const isActive = (href) =>
+    (activePath || '').startsWith(href)
+      ? 'bg-[#FFF1EC] text-[#CA3C25]'
+      : 'text-white hover:text-yellow-200';
 
+  const isStaff = me && (me.role === 'seller' || me.role === 'admin');
+%>
+
+<nav class="w-full bg-[#CA3C25] rounded-sm">
+  <div class="relative mx-auto max-w-[1200px] h-20 px-5 flex items-center justify-between">
     <svg class="pointer-events-none absolute right-2 bottom-0 h-16 opacity-70"
-         viewBox="0 0 152 169" fill="none">
+         viewBox="0 0 152 169" fill="none" aria-hidden="true">
       <path d="M109.969 90.4185C125 93.4206 139.889 82.258 143.239 65.4856C146.589 48.7131 137.13 32.6874 122.1 29.6853C107.07 26.6832 92.1807 37.8458 88.8306 54.6182C85.4805 71.3907 94.9504 87.4187 109.969 90.4185ZM109.969 90.4185L95.8169 161.274M41.6213 13.6107L15.3382 145.199M69.9588 19.2708L64.9044 44.5763C64.2406 47.8995 62.8504 51.0437 60.8131 53.8294C58.7757 56.6152 56.1312 58.9879 53.0305 60.8122C49.9297 62.6364 46.4335 63.8765 42.7414 64.4615C39.0494 65.0465 35.2337 64.965 31.5124 64.2217C23.9968 62.7206 17.3215 58.6148 12.9551 52.8076C8.58867 47.0005 6.88873 39.9676 8.22925 33.2562L13.2837 7.95068"
-            stroke="#FFCEA9" stroke-opacity="0.35" stroke-width="17"
-            stroke-linecap="round" stroke-linejoin="round"/>
+            stroke="#FFCEA9" stroke-opacity="0.35" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
 
-    <div class="flex items-center gap-3">
-
+    <div class="flex items-center gap-3 relative z-10">
       <div class="grid place-items-center w-10 h-10 rounded-md">
         <img src="/asset/pic/dinkie-icons_beer-mug.svg" alt="beer mug" class="w-15 h-15">
       </div>
-
       <div class="leading-tight">
-        <div class="text-sunblink font-extrabold text-xl tracking-wide">J’ Pornthip</div>
-        <div class="text-sunblink/90 text-xs">Kitchen Management</div>
+        <div class="text-[#FFFBBD] font-extrabold text-xl tracking-wide">J’ Pornthip</div>
+        <div class="text-[#FFFBBD]/90 text-xs">Kitchen Management</div>
       </div>
     </div>
 
-
-    <div class="relative pr-10">
-      <div class="rounded-full border-2 border-amberFlame">
+    <div class="relative pr-2 z-10">
+        <div class="rounded-full border-2 border-amberFlame">
         <div class="flex items-center gap-1 bg-white rounded-full px-1 py-1">
 
-          <a href="/order"
+          <a href="/order-admin"
           class="flex items-center gap-2 rounded-full bg-[#7E1D00] text-white px-4 py-2 shadow-sm">
             <img src="/asset/pic/Chef hat.svg" alt="Chef Hat" class="w-5 h-5">
             <span class="font-semibold">Order</span>
           </a>
 
-          <a href="/sales"
+          <a href="/Sales"
              class="flex items-center gap-2 rounded-full text-[#CA3C25] hover:bg-[#FFF1EC] px-4 py-2">
             <img src="/asset/pic/tackSale.svg" alt="tackSale" class="w-5 h-5">
             <span>Sales</span>
           </a>
-        
         </div>
-      </div>
-    </div>
   </div>
 </nav>

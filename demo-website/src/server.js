@@ -3,6 +3,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import router from './routes/router.js';
 import menuService from './services/menuService.js';
+import Order from './models/Order.js';
 
 dotenv.config();
 
@@ -20,6 +21,8 @@ const connect = async () => {
   }
 };
 await connect();
+app.use(router);
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -29,6 +32,8 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.join(__dirname, '..', 'public');
 const viewsDir = path.join(__dirname, 'views');
+
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 app.set('view engine', 'ejs');
 app.set('views', viewsDir);

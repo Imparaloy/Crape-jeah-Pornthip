@@ -17,8 +17,8 @@ const CUSTOM_CONFIG = {
     },
     {
       id: 'icecream',
-      title: 'ไอศกรีม',
-      description: 'สามารถเลือกหน้าไอศกรีมได้ตามที่ต้องการ',
+      title: 'ไส้ครีม',
+      description: 'สามารถเลือกไส้ครีมได้ตามที่ต้องการ',
       type: 'single',
       required: false,
       options: [
@@ -26,8 +26,6 @@ const CUSTOM_CONFIG = {
         { id: 'chocolate', name: 'ช็อกโกแลต', price: 10 },
         { id: 'strawberry', name: 'สตรอว์เบอร์รี่', price: 10 },
         { id: 'matcha', name: 'มัทฉะ', price: 15 },
-        { id: 'coffee', name: 'คอฟฟี่', price: 15 },
-        { id: 'mango', name: 'มะม่วง', price: 20 },
       ],
     },
     {
@@ -77,9 +75,8 @@ const CUSTOM_CONFIG = {
         { id: 'condensed-milk', name: 'นมข้นหวาน', price: 0 },
         { id: 'chocolate', name: 'ช็อกโกแลต', price: 0 },
         { id: 'strawberry', name: 'ซอสสตรอว์เบอร์รี่', price: 0 },
-        { id: 'honey', name: 'น้ำผึ้ง', price: 10 },
-        { id: 'thai-tea', name: 'ชาไทย', price: 10 },
         { id: 'spicy', name: 'ซอสพริก', price: 0 },
+        { id: 'mayo', name: 'มายองเนส', price: 0 },
       ],
     },
   ],

@@ -32,7 +32,7 @@
 </script>
 
 </head>
-<body class="bg-gray-50">
+<body class="bg-[#fdf4ee]">
   <%- include('components/navbar') %>
 
   <main class="container mx-auto px-4 py-8">
@@ -84,21 +84,49 @@
       </div>
     </section>
   </main>
-
-  <!-- Fixed Cart Position -->
-  <div class="fixed top-24 right-4 w-80">
-    <%- include('components/cart', { cart: cart || [] }) %>
-  </div>
-
+  <footer class="bg-[#C24025] text-[#FDECC8] py-6 mt-12">
+    <div class="container mx-auto px-4 text-center">
+      &copy; 2024 J' Pornthip. All rights reserved.
+    </div>
+  </footer>
   <script>
-    function addToCart(menuId) {
-      // Implement add to cart logic here
-      console.log('Adding to cart:', menuId);
+    async function addToCart(menuId) {
+      try {
+        const token = window.localStorage.getItem('token');
+        if (!token) {
+          // ต้องเข้าสู่ระบบก่อนจึงจะเพิ่มลงตะกร้าได้
+          window.location.href = '/login';
+          return;
+        }
+        const res = await fetch('/api/cart/items', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ menuId, qty: 1 }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'เพิ่มลงตะกร้าไม่สำเร็จ');
+        showToast('เพิ่มลงตะกร้าแล้ว');
+      } catch (err) {
+        showToast(err.message || 'เกิดข้อผิดพลาด', true);
+      }
     }
 
-    function removeFromCart(menuId) {
-      // Implement remove from cart logic here
-      console.log('Removing from cart:', menuId);
+    function showToast(message, isError = false) {
+      let toast = document.getElementById('global-toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'global-toast';
+        toast.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 z-50 rounded-full px-5 py-3 shadow-lg text-sm';
+        document.body.appendChild(toast);
+      }
+      toast.textContent = message;
+      toast.classList.remove('bg-red-600','text-white','bg-green-600');
+      toast.classList.add(isError ? 'bg-red-600' : 'bg-green-600', 'text-white');
+      toast.style.opacity = '1';
+      setTimeout(() => { toast.style.transition = 'opacity .4s'; toast.style.opacity = '0'; }, 1400);
     }
   </script>
 </body>

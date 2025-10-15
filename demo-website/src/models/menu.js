@@ -6,7 +6,8 @@ const MenuSchema = new mongoose.Schema(
     name: { type: String, required: true, trim: true },
     description: String,
     price: { type: Number, required: true, min: 0 },
-    imageUrl: String,
+    image: String,
+    orderCount: { type: Number, default: 0 },
     isRecommended: { type: Boolean, default: false },
     available: { type: Boolean, default: true },
     categoryId: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
@@ -15,6 +16,4 @@ const MenuSchema = new mongoose.Schema(
 );
 
 MenuSchema.index({ name: "text" });
-const Menu = mongoose.models.Menu || mongoose.model("Menu", MenuSchema);
-
-export default Menu;
+export default mongoose.models.Menu || mongoose.model("Menu", MenuSchema);

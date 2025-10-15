@@ -14,12 +14,13 @@ const OrderItemSchema = new mongoose.Schema(
     productId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Menu",
-      required: true,
+      required: false,
     },
     nameSnap: { type: String, required: true },
     unitPriceSnap: { type: Number, required: true, min: 0 },
     quantity: { type: Number, required: true, min: 1 },
     toppings: { type: [OrderToppingSchema], default: [] },
+    detailsSnap: { type: String },
     linePrice: { type: Number, required: true, min: 0 }, // คำนวณรวม
   },
   { _id: false }

@@ -9,22 +9,35 @@
 <body class="bg-[#fdf4ee] min-h-screen">
   <%- include('components/navbar') %>
   <main class="container mx-auto px-4 py-10">
+    <h1 class="text-3xl md:text-4xl font-extrabold text-red-700 mb-6">สถานะคำสั่งซื้อล่าสุด</h1>
+    <div id="status-alert" class="hidden mb-6 rounded-xl border border-yellow-200 bg-yellow-50 px-4 py-3 text-yellow-900"></div>
+
+    <!-- Order Info/Header -->
+    <div id="order-info" class="hidden mb-4 flex flex-wrap items-center gap-3 text-sm">
+      <span id="order-code" class="rounded-full bg-white px-3 py-1 text-gray-700 shadow">คำสั่งซื้อ #—</span>
+      <span id="order-status" class="rounded-full bg-green-100 px-3 py-1 text-green-700">สถานะ: -</span>
+      <span id="order-time" class="text-gray-500">อัปเดตล่าสุด: —</span>
+    </div>
+
     <section class="mb-10">
-      <h1 class="text-3xl font-bold text-red-700 mb-6">สถานะคำสั่งซื้อ</h1>
-      <div id="status-alert" class="hidden bg-yellow-100 text-yellow-900 px-4 py-3 rounded mb-6"></div>
-      <div id="cart-container" class="bg-white rounded-xl shadow p-6">
-        <div id="cart-loading" class="text-gray-500">กำลังโหลด...</div>
-        <table id="cart-table" class="hidden min-w-full leading-normal">
-          <thead>
-            <tr>
-              <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">เมนู</th>
-              <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">จำนวน</th>
-              <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">หมายเหตุ</th>
-            </tr>
-          </thead>
-          <tbody id="cart-rows"></tbody>
-        </table>
-        <div id="cart-empty" class="hidden text-gray-500">ยังไม่มีรายการในตะกร้า</div>
+      <div id="card" class="rounded-2xl bg-white shadow-lg">
+        <div class="px-6 py-5 border-b rounded-t-2xl bg-gray-50">
+          <h2 class="text-xl font-semibold text-gray-900">รายละเอียดคำสั่งซื้อ</h2>
+        </div>
+        <div class="p-6">
+          <div id="cart-loading" class="text-gray-500">กำลังโหลด...</div>
+          <table id="cart-table" class="hidden min-w-full text-sm">
+            <thead>
+              <tr class="text-gray-700">
+                <th class="px-5 py-3 text-left font-semibold bg-gray-50">เมนู</th>
+                <th class="px-5 py-3 text-left font-semibold bg-gray-50">จำนวน</th>
+                <th class="px-5 py-3 text-left font-semibold bg-gray-50">หมายเหตุ</th>
+              </tr>
+            </thead>
+            <tbody id="cart-rows"></tbody>
+          </table>
+          <div id="cart-empty" class="hidden text-gray-500">ยังไม่มีคำสั่งซื้อ</div>
+        </div>
       </div>
     </section>
   </main>

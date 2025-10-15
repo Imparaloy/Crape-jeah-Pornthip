@@ -274,9 +274,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderSummary();
   };
 
-  orderButton.addEventListener('click', () => {
+  orderButton.addEventListener('click', async () => {
     if (orderButton.disabled) return;
-    window.location.href = '/status';
+    try {
+      orderButton.disabled = true;
+      const res = await fetch('/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${state.token}`,
+        },
+        body: JSON.stringify({ note: '' }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'ไม่สามารถสร้างออเดอร์ได้');
+      const id = data._id || data.id;
+      if (id) {
+        window.location.href = `/status?orderId=${id}`;
+      } else {
+        window.location.href = '/status';
+      }
+    } catch (err) {
+      showAlert(err.message || 'เกิดข้อผิดพลาดในการสร้างออเดอร์');
+    } finally {
+      orderButton.disabled = false;
+    }
   });
 
   const loadCart = async () => {

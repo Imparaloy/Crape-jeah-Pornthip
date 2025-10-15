@@ -4,71 +4,95 @@ document.addEventListener('DOMContentLoaded', async () => {
   const table = document.getElementById('cart-table');
   const rows = document.getElementById('cart-rows');
   const emptyState = document.getElementById('cart-empty');
+  const infoBox = document.getElementById('order-info');
+  const codeEl = document.getElementById('order-code');
+  const statusEl = document.getElementById('order-status');
+  const timeEl = document.getElementById('order-time');
 
   const showAlert = (message, type = 'info') => {
     if (!alertBox) return;
     alertBox.textContent = message;
     alertBox.classList.remove('hidden');
+    alertBox.classList.remove('bg-red-100','text-red-900','bg-yellow-100','text-yellow-900');
     if (type === 'error') {
       alertBox.classList.add('bg-red-100', 'text-red-900');
-      alertBox.classList.remove('bg-yellow-100', 'text-yellow-900');
     } else {
       alertBox.classList.add('bg-yellow-100', 'text-yellow-900');
-      alertBox.classList.remove('bg-red-100', 'text-red-900');
     }
   };
 
   const token = window.localStorage.getItem('token');
   if (!token) {
     showAlert('กรุณาเข้าสู่ระบบเพื่อดูสถานะคำสั่งซื้อ', 'error');
-    loading.textContent = '';
+    if (loading) loading.textContent = '';
     setTimeout(() => window.location.href = '/login', 1200);
     return;
   }
 
   try {
-    const res = await fetch('/api/cart', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      }
+    const params = new URLSearchParams(window.location.search);
+    const orderId = params.get('orderId');
+    const url = orderId ? `/api/orders/${orderId}` : '/api/orders/latest';
+    const res = await fetch(url, {
+      headers: { Authorization: `Bearer ${token}` }
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message || 'ไม่สามารถโหลดตะกร้าได้');
+    const order = await res.json();
+    if (!res.ok) throw new Error(order.message || 'ไม่สามารถโหลดคำสั่งซื้อล่าสุดได้');
 
-    const cart = data;
-    const items = Array.isArray(cart.items) ? cart.items : [];
-
-    loading.classList.add('hidden');
+    const items = Array.isArray(order.items) ? order.items : [];
+    if (loading) loading.classList.add('hidden');
 
     if (!items.length) {
-      emptyState.classList.remove('hidden');
+      if (emptyState) {
+        emptyState.textContent = 'ยังไม่มีคำสั่งซื้อ';
+        emptyState.classList.remove('hidden');
+      }
+      if (infoBox) infoBox.classList.add('hidden');
       return;
     }
 
-    table.classList.remove('hidden');
-    rows.innerHTML = '';
+    // Header info
+    if (infoBox) {
+      infoBox.classList.remove('hidden');
+      if (codeEl) codeEl.textContent = `คำสั่งซื้อ #${order._id ? String(order._id).slice(-6) : '-'}`;
+      if (statusEl) {
+        const map = {
+          pending: { text: 'รอดำเนินการ', cls: ['bg-yellow-100','text-yellow-800'] },
+          preparing: { text: 'กำลังทำ', cls: ['bg-blue-100','text-blue-800'] },
+          completed: { text: 'เสร็จแล้ว', cls: ['bg-green-100','text-green-800'] },
+          cancelled: { text: 'ยกเลิก', cls: ['bg-red-100','text-red-800'] },
+          paid: { text: 'ชำระเงินแล้ว', cls: ['bg-emerald-100','text-emerald-800'] }
+        };
+        const m = map[order.status] || map.pending;
+        statusEl.textContent = `สถานะ: ${m.text}`;
+        statusEl.className = 'rounded-full px-3 py-1 ' + m.cls.join(' ');
+      }
+      if (timeEl) {
+        const ts = new Date(order.updatedAt || order.createdAt).toLocaleString('th-TH', { hour12: false });
+        timeEl.textContent = `อัปเดตล่าสุด: ${ts}`;
+      }
+    }
+
+    if (table) table.classList.remove('hidden');
+    if (rows) rows.innerHTML = '';
 
     items.forEach((item) => {
-      const menu = item.menuId || {};
-      const custom = item.custom || {};
-      const optionTexts = Array.isArray(custom.options)
-        ? custom.options.map(op => `${op.group}: ${op.name}${op.price ? ` (+${op.price}฿)` : ''}`)
-        : [];
-      const detailText = optionTexts.length ? optionTexts.join(', ') : (item.note || '-');
-      const displayName = menu.name || custom.name || 'ไม่ทราบชื่อเมนู';
+      const displayName = item.nameSnap || 'เมนู';
+      const qty = item.quantity || 1;
+      const detailText = item.detailsSnap || '-';
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">${displayName}</td>
-        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">${item.qty}</td>
-        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">${detailText}</td>
+        <td class="px-5 py-4 border-b border-gray-100 bg-white text-sm text-gray-800">${displayName}</td>
+        <td class="px-5 py-4 border-b border-gray-100 bg-white text-sm text-gray-800">${qty}</td>
+        <td class="px-5 py-4 border-b border-gray-100 bg-white text-sm text-gray-700">${detailText}</td>
       `;
       rows.appendChild(tr);
     });
   } catch (err) {
     console.error(err);
-    loading.textContent = '';
-    table.classList.add('hidden');
-    emptyState.classList.remove('hidden');
+    if (loading) loading.textContent = '';
+    if (table) table.classList.add('hidden');
+    if (emptyState) emptyState.classList.remove('hidden');
     showAlert(err.message, 'error');
   }
 });

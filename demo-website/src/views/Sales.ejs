@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orders | Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#FFF8F0] min-h-screen">
+
+<%- include('components/navbar-admin', {
+  activePath: (typeof activePath !== 'undefined' && activePath) ? activePath : '/Sales',
+  me: (typeof me !== 'undefined') ? me : null
+}) %>
+
+<div class="max-w-6xl mx-auto py-6">
+  <h1 class="text-3xl font-bold mb-2">Sales Dashboard</h1><br>
+
+  <div class="grid md:grid-cols-2 gap-6">
+  <!-- Total Sales -->
+  <div class="bg-[#FFFCFF] rounded-2xl border-2 border-[#F5D6B0] p-6 pl-8">
+    <div class="flex items-center justify-between mb-8 mt-6">
+      <h2 class="text-3xl font-semibold">Total Sales</h2>
+    </div>
+    <div class="space-y-3 text-stone-800">
+      <div class="flex items-center gap-2 font-bold text-4xl">
+        <span>$</span>
+        <span><%= summary.total_sales.toFixed(2) %></span>
+      </div>
+      <div class="font-semibold mb-10">
+        From <%= summary.total_orders %> Completed Orders
+      </div>
+    </div>
+  </div>
+
+  <!-- Today's Sales -->
+  <div class="bg-[#FFFCFF] rounded-2xl border-2 border-[#F5D6B0] p-6 pl-8">
+    <div class="flex items-center justify-between mb-8 mt-6">
+      <h2 class="text-3xl font-semibold">Today's Sales</h2>
+    </div>
+    <div class="space-y-3 text-stone-800">
+      <div class="flex items-center gap-2 font-bold text-4xl">
+        <span>$</span>
+        <span><%= summary.today_sales.toFixed(2) %></span>
+      </div>
+      <div class="font-semibold mb-10">
+        From <%= summary.total_orders_today %> Completed Orders
+      </div>
+    </div>
+  </div>
+</div>
+
+  <h1 class="text-2xl font-bold mb-2 mt-10">Best Seller</h1><br>
+
+<div class="grid md:grid-cols-2 gap-6">
+  <!-- Menu -->
+  <div class="bg-[#FFFCFF] rounded-2xl border-2 border-[#F5D6B0] p-8 pb-10">
+    <div class="flex items-center justify-between mb-8 mt-2">
+      <h2 class="text-3xl font-bold">Menu</h2>
+      <span class="text-xl font-bold">Total Price</span>
+    </div>
+
+    <div class="space-y-3 text-stone-800">
+      <% bestMenus.forEach(menu => { %>
+        <div class="flex justify-between font-semibold">
+          <span><%= menu.name %></span>
+          <span><%= menu.total_price.toFixed(2) %></span>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+
+  <!-- Topping -->
+  <div class="bg-[#FFFCFF] rounded-2xl border-2 border-[#F5D6B0] p-8 pb-10">
+    <div class="flex items-center justify-between mb-8 mt-2">
+      <h2 class="text-3xl font-bold">Topping</h2>
+      <span class="text-xl font-bold">Total Price</span>
+    </div>
+
+    <div class="space-y-3 text-stone-800">
+      <% bestToppings.forEach(top => { %>
+        <div class="flex justify-between font-semibold">
+          <span><%= top.name %></span>
+          <span><%= top.total_price.toFixed(2) %></span>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</div>
+
+<!--  <h1 class="text-3xl font-bold mb-2 mt-10">Sales Dashboard</h1><br>
+
+<div class="bg-[#FFFCFF] rounded-2xl border-2 border-[#F5D6B0] p-8 pb-10">
+  <table class="min-w-full border-collapse">
+    <thead>
+      <tr class="bg-[#FFFCFF] text-left">
+        <th class="p-3 font-bold"></th>
+        <th class="p-3 font-bold">Name</th>
+        <th class="p-3 font-bold">Amount</th>
+        <th class="p-3 font-bold">Price</th>
+      </tr>
+    </thead>
+    <tbody class="text-stone-800">
+      <% details.forEach(row => { 
+          let bg = '';
+          if (row.category === 'แป้ง') bg = 'bg-yellow-100';
+          else if (row.category === 'ท้อปปิ้ง') bg = 'bg-pink-100';
+          else if (row.category === 'cyan') bg = 'bg-cyan-100';
+          else if (row.category === 'purple') bg = 'bg-purple-100';
+      %>
+        <tr class="<%= bg %>">
+          <td class="p-3 font-semibold"><%= row.category %></td>
+          <td class="p-3"><%= row.name %></td>
+          <td class="p-3"><%= row.amount %></td>
+          <td class="p-3"><%= row.price.toFixed(2) %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div> -->
+</body>
+</html>

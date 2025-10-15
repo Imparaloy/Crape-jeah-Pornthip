@@ -59,7 +59,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const resolveImage = (item) => {
     const menu = item && item.menuId ? item.menuId : {};
-    return menu.imageUrl || '/img/crepe.png';
+    // Prefer menu.image (schema field), fallback to legacy imageUrl, then default placeholder
+    return menu.image || menu.imageUrl || '/img/crepe.png';
   };
 
   const buildItemDescription = (item) => {
@@ -136,7 +137,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const image = document.createElement('img');
       image.src = resolveImage(item);
       image.alt = title;
-      image.className = 'h-full w-full object-cover';
+  image.className = 'h-full w-full object-cover object-top';
       image.onerror = () => { image.src = '/img/crepe.png'; };
       figure.appendChild(image);
 

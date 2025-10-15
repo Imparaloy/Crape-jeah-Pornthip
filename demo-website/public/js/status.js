@@ -54,7 +54,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Header info
     if (infoBox) {
       infoBox.classList.remove('hidden');
-      if (codeEl) codeEl.textContent = `คำสั่งซื้อ #${order._id ? String(order._id).slice(-6) : '-'}`;
+      if (codeEl) {
+        const code = (order.orderNumber != null) ? String(order.orderNumber) : (order._id ? String(order._id).slice(-6) : '-');
+        codeEl.textContent = `คำสั่งซื้อ #${code}`;
+      }
       if (statusEl) {
         const map = {
           pending: { text: 'รอดำเนินการ', cls: ['bg-yellow-100','text-yellow-800'] },

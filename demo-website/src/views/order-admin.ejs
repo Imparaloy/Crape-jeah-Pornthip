@@ -87,7 +87,23 @@
               </div>
               <div>
                 <div class="font-semibold">Ingredients</div>
-                <div class="text-stone-700"><%= (o.ingredients ?? []).join(", ") %></div>
+                <% if (o.detailsText && o.detailsText.trim() !== '') { %>
+                  <div class="mt-1 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 px-3 py-2 text-sm">
+                    <%= o.detailsText %>
+                  </div>
+                <% } %>
+                <% if (Array.isArray(o.toppingNames) && o.toppingNames.length) { %>
+                  <div class="mt-2 flex flex-wrap gap-2">
+                    <% o.toppingNames.forEach(function(t){ %>
+                      <span class="inline-flex items-center rounded-full bg-white border border-stone-200 px-3 py-1 text-xs text-stone-700">
+                        <%= t %>
+                      </span>
+                    <% }) %>
+                  </div>
+                <% } %>
+                <% if ((!o.detailsText || o.detailsText.trim() === '') && (!o.toppingNames || o.toppingNames.length === 0)) { %>
+                  <div class="text-stone-500">-</div>
+                <% } %>
               </div>
             </div>
 

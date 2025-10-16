@@ -33,14 +33,25 @@ const toView = (o) => {
   const first = items[0] || {};
   const base = first.nameSnap || '-';
 
-  // Prefer the per-item detailsSnap (same field used on status page as "หมายเหตุ"),
-  // fallback to order-wide note, otherwise '-'
-  const note = (() => {
+  // Details text sourced from item's detailsSnap (used on status page as "หมายเหตุ"),
+  // fallback to order-wide note
+  const detailsText = (() => {
     const d = (first?.detailsSnap || '').toString().trim();
     if (d && d !== '-') return d;
     const n = (o.note || '').toString().trim();
-    return n || '-';
+    return n || '';
   })();
+
+  // Parse details text into parts (split by comma) for a better UI
+  const detailsParts = detailsText
+    ? detailsText.split(',').map(s => s.trim()).filter(Boolean)
+    : [];
+
+  // Collect topping names as a fallback/extra info
+  const toppingNames = items
+    .flatMap(it => (it.toppings || []))
+    .map(t => t?.nameSnap)
+    .filter(Boolean);
 
   return {
     id: String(o._id),
@@ -48,9 +59,12 @@ const toView = (o) => {
     time,
     price: computeTotal(o),
     base,
-    // Keep the existing property name expected by the EJS but fill it with note text
-    ingredients: note ? [note] : [],
-    note,
+    // Back-compat: keep 'ingredients' as topping names (old behavior)
+    ingredients: toppingNames,
+    // New fields for improved UI
+    toppingNames,
+    detailsText,
+    detailsParts,
     status: uiStatus(o.status),
   };
 };

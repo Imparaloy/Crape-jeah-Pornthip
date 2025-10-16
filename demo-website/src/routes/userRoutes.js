@@ -7,6 +7,7 @@ const useUserRoute = async (router) => {
   router.get('/me', authMiddleware(), userController.getProfile)
   router.post('/register', userController.register)
   router.post('/login', userController.login)
+  router.post('/logout', userController.logout)
 }
 
 export default useUserRoute

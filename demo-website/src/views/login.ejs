@@ -57,7 +57,12 @@
           localStorage.setItem('user', JSON.stringify(data.user));
         }
         alert('เข้าสู่ระบบสำเร็จ');
-        location.href = '/';
+        const role = (data.user && data.user.role) ? data.user.role : 'customer';
+        if (role === 'seller' || role === 'admin') {
+          location.href = '/orders';
+        } else {
+          location.href = '/';
+        }
       } catch (err) {
         alert(err.message);
       }

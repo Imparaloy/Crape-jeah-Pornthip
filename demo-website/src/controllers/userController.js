@@ -79,12 +79,23 @@ const userController = {
       const jwt_secret = process.env.JWT_SECRET;
       const payload = { name: user.name, userId: user.id, role: user.role };
       const token = jwt.sign(payload, jwt_secret, { expiresIn: "3d" });
+      // Also set token to httpOnly cookie for SSR middlewares
+      res.cookie('token', token, { httpOnly: true, sameSite: 'lax', maxAge: 3*24*60*60*1000 });
       res.status(200).json({
         token,
         user: sanitizeUser(user),
       });
     } catch (err) {
       res.status(500).json({ message: "Failed to login" });
+    }
+  },
+  logout: async (req, res) => {
+    try {
+      // Clear the httpOnly cookie used for SSR auth
+      res.clearCookie('token');
+      return res.status(200).json({ ok: true });
+    } catch (err) {
+      return res.status(500).json({ ok: false, message: 'Failed to logout' });
     }
   },
   getProfile: async (req, res) => {

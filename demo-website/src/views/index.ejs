@@ -21,6 +21,9 @@
       const role = data?.user?.role;
 
       if (role === 'seller' || role === 'admin') {
+        // ป้องกันวนลูป: ถ้าอยู่ที่ /orders แล้ว หรือเพิ่ง redirect ไปแล้วใน session นี้ ให้หยุด
+        if (location.pathname === '/orders' || sessionStorage.getItem('redirectedToOrders') === '1') return;
+        sessionStorage.setItem('redirectedToOrders', '1');
         // เปลี่ยนหน้าโดยไม่ยัดประวัติ (กด back จะไม่วน)
         location.replace('/orders');
       }

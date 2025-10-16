@@ -6,6 +6,8 @@ import menuService from './services/menuService.js';
 import Order from './models/Order.js';
 import salesRouter from './routes/salesRoutes.js';
 import ordersAdminRouter from './routes/ordersAdminRoutes.js';
+import pageAuth from './middlewares/pageAuth.js';
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
@@ -27,6 +29,7 @@ await connect();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -45,8 +48,14 @@ app.get('/js/auth.js', (req, res) => {
   res.sendFile(path.join(publicDir, 'js/auth.js'));
 });
 
-// Admin pages (SSR)
-app.use('/', ordersAdminRouter);
+// Admin pages (SSR) with server-side role check
+app.get('/orders', pageAuth(['seller','admin']), (req, res, next) => {
+  // delegate to router handler for rendering
+  return ordersAdminRouter.handle(req, res, next);
+});
+app.put('/orders/:id/status', pageAuth(['seller','admin']), (req, res, next) => {
+  return ordersAdminRouter.handle(req, res, next);
+});
 
 // Public API endpoints
 app.use('/api', router);

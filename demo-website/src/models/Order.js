@@ -46,9 +46,7 @@ const OrderSchema = new mongoose.Schema(
       required: true,
     },
     sellerId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  // Sequential visible order number (1,2,3,...) assigned at creation time
-  // Keep schema permissive for existing documents; we enforce uniqueness via a partial index below
-  orderNumber: { type: Number, index: true },
+  orderNumber: { type: Number },
     items: { type: [OrderItemSchema], default: [] },
     totalPrice: { type: Number, required: true, min: 0 },
     status: {
@@ -79,9 +77,11 @@ OrderSchema.pre("save", async function (next) {
 });
 
 OrderSchema.index({ userId: 1, createdAt: -1 });
+// Optimize admin queries filtered by status and sorted by createdAt
+OrderSchema.index({ status: 1, createdAt: -1 });
 // Ensure uniqueness only for documents that already have orderNumber
 OrderSchema.index(
   { orderNumber: 1 },
   { unique: true, partialFilterExpression: { orderNumber: { $exists: true } } }
 );
-export default mongoose.model("Order", OrderSchema);
+export default mongoose.models.Order || mongoose.model("Order", OrderSchema);

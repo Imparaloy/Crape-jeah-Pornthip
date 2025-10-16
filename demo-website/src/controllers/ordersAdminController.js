@@ -33,10 +33,14 @@ const toView = (o) => {
   const first = items[0] || {};
   const base = first.nameSnap || '-';
 
-  const ingredients = items
-    .flatMap(it => (it.toppings || []))
-    .map(t => t?.nameSnap)
-    .filter(Boolean);
+  // Prefer the per-item detailsSnap (same field used on status page as "หมายเหตุ"),
+  // fallback to order-wide note, otherwise '-'
+  const note = (() => {
+    const d = (first?.detailsSnap || '').toString().trim();
+    if (d && d !== '-') return d;
+    const n = (o.note || '').toString().trim();
+    return n || '-';
+  })();
 
   return {
     id: String(o._id),
@@ -44,7 +48,9 @@ const toView = (o) => {
     time,
     price: computeTotal(o),
     base,
-    ingredients,
+    // Keep the existing property name expected by the EJS but fill it with note text
+    ingredients: note ? [note] : [],
+    note,
     status: uiStatus(o.status),
   };
 };
@@ -59,7 +65,11 @@ console.log('[ordersAdmin] HIT /orders');
       activeTab === 'in'     ? { status: { $in: ['pending','paid','preparing'] } } :
                                {};
 
-    const docs = await Order.find(match).sort({ createdAt: -1 }).lean(); // ✅ .lean()
+    const docs = await Order.find(match)
+      .select('createdAt items totalPrice status')
+      .sort({ createdAt: -1 })
+      .limit(200)
+      .lean();
 
     const [total, inProcess, served] = await Promise.all([
       Order.countDocuments({}),
@@ -68,6 +78,8 @@ console.log('[ordersAdmin] HIT /orders');
     ]);
 
     const orders = docs.map(toView);
+
+    console.log('[ordersAdmin] docs:', docs.length, 'counters:', { total, inProcess, served });
 
     res.render('order-admin', {
       orders,

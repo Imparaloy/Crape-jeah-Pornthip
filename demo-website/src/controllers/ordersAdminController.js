@@ -33,6 +33,8 @@ const computeTotal = (o) => {
 
 const toView = (o) => {
   const created = o.createdAt ? new Date(o.createdAt) : fallbackTimeFromId(o);
+  const updated = o.updatedAt ? new Date(o.updatedAt) : created;
+
   const time = created
     ? created.toLocaleTimeString("th-TH", {
         hour: "2-digit",
@@ -40,45 +42,44 @@ const toView = (o) => {
       })
     : "-";
 
+  const updatedAtText = updated
+    ? updated.toLocaleString("th-TH", { hour12: false })
+    : "-";
+
   const items = Array.isArray(o.items) ? o.items : [];
-  const first = items[0] || {};
-  const base = first.nameSnap || "-";
+  const mappedItems = items.map((item) => {
+    const toppings = (item.toppings || [])
+      .map((t) => t?.nameSnap)
+      .filter(Boolean);
+    const rawDetails = (item.detailsSnap || "").toString().trim();
+    const detailText = rawDetails && rawDetails !== "-"
+      ? rawDetails
+      : toppings.length
+        ? toppings.join(" + ")
+        : "-";
 
-  // Details text sourced from item's detailsSnap (used on status page as "หมายเหตุ"),
-  // fallback to order-wide note
-  const detailsText = (() => {
-    const d = (first?.detailsSnap || "").toString().trim();
-    if (d && d !== "-") return d;
-    const n = (o.note || "").toString().trim();
-    return n || "";
-  })();
+    return {
+      name: item.nameSnap || "-",
+      quantity: Number(item.quantity) || 1,
+      detailText,
+      toppingNames: toppings,
+    };
+  });
 
-  // Parse details text into parts (split by comma) for a better UI
-  const detailsParts = detailsText
-    ? detailsText
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean)
-    : [];
-
-  // Collect topping names as a fallback/extra info
-  const toppingNames = items
-    .flatMap((it) => it.toppings || [])
-    .map((t) => t?.nameSnap)
-    .filter(Boolean);
+  const orderNote = (o.note || "").toString().trim();
+  const orderCode =
+    o.orderNumber != null ? String(o.orderNumber) : String(o._id).slice(-6);
 
   return {
     id: String(o._id),
     idShort: String(o._id).slice(-6),
+    orderNumber: o.orderNumber ?? null,
+    code: orderCode,
     time,
+    updatedAtText,
     price: computeTotal(o),
-    base,
-    // Back-compat: keep 'ingredients' as topping names (old behavior)
-    ingredients: toppingNames,
-    // New fields for improved UI
-    toppingNames,
-    detailsText,
-    detailsParts,
+    items: mappedItems,
+    note: orderNote,
     status: uiStatus(o.status),
   };
 };
@@ -98,7 +99,7 @@ export const listOrdersAdmin = async (req, res, next) => {
           : {};
 
     const docs = await Order.find(match)
-      .select("createdAt items totalPrice status")
+      .select("orderNumber createdAt updatedAt items totalPrice status note")
       .sort({ createdAt: -1 })
       .limit(200)
       .lean();

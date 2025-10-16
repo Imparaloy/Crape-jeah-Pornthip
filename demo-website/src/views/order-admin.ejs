@@ -42,69 +42,97 @@
     <div class="grid md:grid-cols-2 gap-6">
       <% if (orders && orders.length > 0) { %>
         <% orders.forEach((o, i) => { %>
-        <div class="bg-[#FFFBF5] rounded-2xl border border-stone-200 p-6">
-            <div class="flex items-center justify-between mb-4">
-            <h2 class="text-xl font-semibold">Order #<%= i + 1 %></h2>
+        <div class="bg-[#FFFBF5] rounded-2xl border border-stone-200 p-6" data-order-card>
+            <div class="flex flex-wrap items-start justify-between gap-4 mb-4">
+              <div>
+                <h2 class="text-xl font-semibold">คำสั่งซื้อ #<%= o.code %></h2>
+                <div class="text-sm text-stone-500 mt-1">อัปเดตล่าสุด: <%= o.updatedAtText ?? '-' %></div>
+              </div>
 
               <% if ((o.status ?? '') === 'Served') { %>
-                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-600 text-white text-sm">
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-600 text-white text-sm" data-status-badge>
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                   </svg>
                   Served
                 </span>
               <% } else { %>
-                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500 text-white text-sm">
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500 text-white text-sm" data-status-badge>
                   In Process
                 </span>
               <% } %>
             </div>
 
-            <div class="space-y-3 text-stone-800">
+            <div class="grid gap-3 text-sm text-stone-800 md:grid-cols-2">
               <div class="flex items-center gap-2">
-                <span class="inline-flex items-center gap-2 rounded-full text-black text-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
-                class="w-4 h-4"
-                fill="gray">
-                  <path d="M520-496v-144q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640v159q0 8 3 15.5t9 13.5l132 132q11 11 28 11t28-11q11-11 11-28t-11-28L520-496ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-400Zm0 320q133 0 226.5-93.5T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160Z"/>
-                </svg>
-              </span>
-                <span><%= o.time ?? '-' %></span>
+                <span class="inline-flex items-center rounded-full text-black">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" class="w-4 h-4" fill="gray">
+                    <path d="M520-496v-144q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640v159q0 8 3 15.5t9 13.5l132 132q11 11 28 11t28-11q11-11 11-28t-11-28L520-496ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-400Zm0 320q133 0 226.5-93.5T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160Z"/>
+                  </svg>
+                </span>
+                <span>สร้างเมื่อ <%= o.time ?? '-' %></span>
               </div>
               <div class="flex items-center gap-2">
-                <span class="inline-flex items-center gap-2 rounded-full text-black text-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
-                class="w-4 h-4"
-                fill="gray">
-                  <path d="M481-120q-17 0-28.5-11.5T441-160v-46q-45-10-79-35t-55-70q-7-14-.5-29.5T330-363q14-6 29 .5t23 21.5q17 30 43 45.5t64 15.5q41 0 69.5-18.5T587-356q0-35-22-55.5T463-458q-86-27-118-64.5T313-614q0-65 42-101t86-41v-44q0-17 11.5-28.5T481-840q17 0 28.5 11.5T521-800v44q38 6 66 24.5t46 45.5q9 13 3.5 29T614-634q-14 6-29 .5T557-653q-13-14-30.5-21.5T483-682q-44 0-67 19.5T393-614q0 33 30 52t104 40q69 20 104.5 63.5T667-358q0 71-42 108t-104 46v44q0 17-11.5 28.5T481-120Z"/>
-                </svg>
-              </span>
-                <span><%= Number(o.price ?? 0).toFixed(2) %></span>
+                <span class="inline-flex items-center rounded-full text-black">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" class="w-4 h-4" fill="gray">
+                    <path d="M481-120q-17 0-28.5-11.5T441-160v-46q-45-10-79-35t-55-70q-7-14-.5-29.5T330-363q14-6 29 .5t23 21.5q17 30 43 45.5t64 15.5q41 0 69.5-18.5T587-356q0-35-22-55.5T463-458q-86-27-118-64.5T313-614q0-65 42-101t86-41v-44q0-17 11.5-28.5T481-840q17 0 28.5 11.5T521-800v44q38 6 66 24.5t46 45.5q9 13 3.5 29T614-634q-14 6-29 .5T557-653q-13-14-30.5-21.5T483-682q-44 0-67 19.5T393-614q0 33 30 52t104 40q69 20 104.5 63.5T667-358q0 71-42 108t-104 46v44q0 17-11.5 28.5T481-120Z"/>
+                  </svg>
+                </span>
+                <span>ยอดรวม ฿<%= Number(o.price ?? 0).toFixed(2) %></span>
               </div>
-              <div>
-                <div class="font-semibold">Base</div>
-                <div class="text-stone-700"><%= o.base ?? '-' %></div>
+            </div>
+
+            <% if (o.note) { %>
+              <div class="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+                <span class="font-semibold">หมายเหตุลูกค้า:</span>
+                <span class="ml-1"><%= o.note %></span>
               </div>
-              <div>
-                <div class="font-semibold">Ingredients</div>
-                <% if (o.detailsText && o.detailsText.trim() !== '') { %>
-                  <div class="mt-1 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 px-3 py-2 text-sm">
-                    <%= o.detailsText %>
-                  </div>
-                <% } %>
-                <% if (Array.isArray(o.toppingNames) && o.toppingNames.length) { %>
-                  <div class="mt-2 flex flex-wrap gap-2">
-                    <% o.toppingNames.forEach(function(t){ %>
-                      <span class="inline-flex items-center rounded-full bg-white border border-stone-200 px-3 py-1 text-xs text-stone-700">
-                        <%= t %>
-                      </span>
+            <% } %>
+
+            <div class="mt-5 overflow-hidden rounded-xl border border-stone-200">
+              <table class="min-w-full text-sm">
+                <thead class="bg-stone-50 text-stone-500">
+                  <tr>
+                    <th class="px-4 py-3 text-left font-semibold">เมนู</th>
+                    <th class="px-4 py-3 text-left font-semibold">จำนวน</th>
+                    <th class="px-4 py-3 text-left font-semibold">หมายเหตุ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% if (o.items && o.items.length) { %>
+                    <% o.items.forEach(function(item){ %>
+                      <tr class="border-t border-stone-100 bg-white">
+                        <td class="px-4 py-3 align-top text-stone-900 font-medium">
+                          <%= item.name %>
+                        </td>
+                        <td class="px-4 py-3 align-top text-stone-700">
+                          <%= item.quantity %>
+                        </td>
+                        <td class="px-4 py-3 align-top text-stone-600">
+                          <% if (item.detailText && item.detailText !== '-') { %>
+                            <div><%= item.detailText %></div>
+                          <% } else { %>
+                            <span class="text-stone-400">-</span>
+                          <% } %>
+                          <% if (Array.isArray(item.toppingNames) && item.toppingNames.length) { %>
+                            <div class="mt-2 flex flex-wrap gap-2">
+                              <% item.toppingNames.forEach(function(t){ %>
+                                <span class="inline-flex items-center rounded-full bg-white border border-stone-200 px-3 py-1 text-xs text-stone-700">
+                                  <%= t %>
+                                </span>
+                              <% }) %>
+                            </div>
+                          <% } %>
+                        </td>
+                      </tr>
                     <% }) %>
-                  </div>
-                <% } %>
-                <% if ((!o.detailsText || o.detailsText.trim() === '') && (!o.toppingNames || o.toppingNames.length === 0)) { %>
-                  <div class="text-stone-500">-</div>
-                <% } %>
-              </div>
+                  <% } else { %>
+                    <tr>
+                      <td colspan="3" class="px-4 py-4 text-center text-stone-500 bg-white">ไม่มีรายการอาหาร</td>
+                    </tr>
+                  <% } %>
+                </tbody>
+              </table>
             </div>
 
             <div class="mt-5">

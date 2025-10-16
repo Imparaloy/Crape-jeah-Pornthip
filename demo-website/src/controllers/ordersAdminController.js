@@ -1,130 +1,122 @@
-import mongoose from "mongoose";
-import Order from "../models/Order.js";
+import mongoose from 'mongoose';
+import Order from '../models/Order.js';
 
-const uiStatus = (db) =>
-  db === "completed"
-    ? "Served"
-    : db === "cancelled"
-      ? "Cancelled"
-      : "In Process";
+const uiStatus = (db) => (
+  db === 'completed' ? 'Served' :
+  db === 'cancelled' ? 'Cancelled' : 'In Process'
+);
 
-const fallbackTimeFromId = (o) => {
+const fallbackTimeFromId = (order) => {
   try {
-    return new mongoose.Types.ObjectId(o._id).getTimestamp();
+    return new mongoose.Types.ObjectId(order._id).getTimestamp();
   } catch {
     return null;
   }
 };
 
-const computeTotal = (o) => {
-  if (typeof o.totalPrice === "number") return o.totalPrice;
-  const items = Array.isArray(o.items) ? o.items : [];
-  return items.reduce((sum, it) => {
-    if (typeof it.linePrice === "number") return sum + it.linePrice;
-    const tops = (it.toppings || []).reduce(
-      (a, t) => a + (Number(t.priceSnap) || 0),
-      0,
-    );
-    const unit = Number(it.unitPriceSnap) || 0;
-    const qty = Number(it.quantity) || 0;
-    return sum + (unit + tops) * qty;
-  }, 0);
+const computeItemLinePrice = (item) => {
+  if (typeof item?.linePrice === 'number') return item.linePrice;
+
+  const toppingsTotal = (item?.toppings || []).reduce(
+    (acc, topping) => acc + (Number(topping?.priceSnap) || 0),
+    0
+  );
+
+  const unitPrice = Number(item?.unitPriceSnap) || 0;
+  const quantity = Number(item?.quantity) || 0;
+
+  return (unitPrice + toppingsTotal) * quantity;
 };
 
-const toView = (o) => {
-  const created = o.createdAt ? new Date(o.createdAt) : fallbackTimeFromId(o);
-  const updated = o.updatedAt ? new Date(o.updatedAt) : created;
+const computeTotal = (order) => {
+  if (typeof order?.totalPrice === 'number') return order.totalPrice;
+  const items = Array.isArray(order?.items) ? order.items : [];
+  return items.reduce((sum, item) => sum + computeItemLinePrice(item), 0);
+};
 
-  const time = created
-    ? created.toLocaleTimeString("th-TH", {
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    : "-";
+const itemsToView = (order) => {
+  const items = Array.isArray(order?.items) ? order.items : [];
+  if (!items.length) return [];
 
-  const updatedAtText = updated
-    ? updated.toLocaleString("th-TH", { hour12: false })
-    : "-";
-
-  const items = Array.isArray(o.items) ? o.items : [];
-  const mappedItems = items.map((item) => {
-    const toppings = (item.toppings || [])
-      .map((t) => t?.nameSnap)
-      .filter(Boolean);
-    const rawDetails = (item.detailsSnap || "").toString().trim();
-    const detailText = rawDetails && rawDetails !== "-"
-      ? rawDetails
-      : toppings.length
-        ? toppings.join(" + ")
-        : "-";
+  return items.map((item, idx) => {
+    const toppings = Array.isArray(item?.toppings) ? item.toppings : [];
+    const details = (item?.detailsSnap || '').toString().trim();
 
     return {
-      name: item.nameSnap || "-",
-      quantity: Number(item.quantity) || 1,
-      detailText,
-      toppingNames: toppings,
+      idx,
+      name: item?.nameSnap || '-',
+      quantity: Number(item?.quantity) || 0,
+      unitPrice: Number(item?.unitPriceSnap) || 0,
+      linePrice: computeItemLinePrice(item),
+      toppings: toppings
+        .map((topping) => topping?.nameSnap)
+        .filter((name) => typeof name === 'string' && name.trim().length > 0),
+      details,
     };
   });
+};
 
-  const orderNote = (o.note || "").toString().trim();
-  const orderCode =
-    o.orderNumber != null ? String(o.orderNumber) : String(o._id).slice(-6);
+const toView = (order) => {
+  const created = order?.createdAt
+    ? new Date(order.createdAt)
+    : fallbackTimeFromId(order);
+
+  const time = created
+    ? created.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })
+    : '-';
 
   return {
-    id: String(o._id),
-    idShort: String(o._id).slice(-6),
-    orderNumber: o.orderNumber ?? null,
-    code: orderCode,
+    id: String(order._id),
+    idShort: String(order._id).slice(-6),
+    orderNumber: typeof order?.orderNumber === 'number' ? order.orderNumber : null,
     time,
-    updatedAtText,
-    price: computeTotal(o),
-    items: mappedItems,
-    note: orderNote,
-    status: uiStatus(o.status),
+    price: computeTotal(order),
+    items: itemsToView(order),
+    note: (order?.note || '').toString().trim(),
+    status: uiStatus(order?.status),
   };
 };
 
 export const listOrdersAdmin = async (req, res, next) => {
-  console.log("[ordersAdmin] HIT /orders");
+  console.log('[ordersAdmin] HIT /orders');
+
   try {
-    const activeTab = ["all", "in", "served"].includes(req.query.status)
+    const activeTab = ['all', 'in', 'served'].includes(req.query.status)
       ? req.query.status
-      : "all";
+      : 'all';
 
     const match =
-      activeTab === "served"
-        ? { status: "completed" }
-        : activeTab === "in"
-          ? { status: { $in: ["pending", "paid", "preparing"] } }
-          : {};
+      activeTab === 'served'
+        ? { status: 'completed' }
+        : activeTab === 'in'
+        ? { status: { $in: ['pending', 'paid', 'preparing'] } }
+        : {};
 
     const docs = await Order.find(match)
-      .select("orderNumber createdAt updatedAt items totalPrice status note")
+      .select('createdAt items totalPrice status orderNumber note')
       .sort({ createdAt: -1 })
       .limit(200)
       .lean();
 
     const [total, inProcess, served] = await Promise.all([
       Order.countDocuments({}),
-      Order.countDocuments({
-        status: { $in: ["pending", "paid", "preparing"] },
-      }),
-      Order.countDocuments({ status: "completed" }),
+      Order.countDocuments({ status: { $in: ['pending', 'paid', 'preparing'] } }),
+      Order.countDocuments({ status: 'completed' }),
     ]);
 
     const orders = docs.map(toView);
 
-    console.log("[ordersAdmin] docs:", docs.length, "counters:", {
+    console.log('[ordersAdmin] docs:', docs.length, 'counters:', {
       total,
       inProcess,
       served,
     });
 
-    res.render("order-admin", {
+    res.render('order-admin', {
       orders,
       counters: { total, inProcess, served },
       activeTab,
-      activePath: "/orders",
+      activePath: '/orders',
       me: req.user || null,
     });
   } catch (err) {
@@ -135,16 +127,24 @@ export const listOrdersAdmin = async (req, res, next) => {
 export const updateOrderStatusAdmin = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { currentUiStatus } = req.body; // 'In Process' | 'Served'
-    const nextDb = currentUiStatus === "In Process" ? "completed" : "preparing";
+    const { currentUiStatus } = req.body; // expected 'In Process'
+
+    if (currentUiStatus !== 'In Process') {
+      return res.status(400).json({
+        ok: false,
+        message: 'Served orders cannot be moved back to In Process.',
+      });
+    }
 
     const updated = await Order.findByIdAndUpdate(
       id,
-      { status: nextDb },
-      { new: true },
+      { status: 'completed' },
+      { new: true }
     ).lean();
-    if (!updated)
-      return res.status(404).json({ ok: false, message: "Order not found" });
+
+    if (!updated) {
+      return res.status(404).json({ ok: false, message: 'Order not found' });
+    }
 
     res.json({ ok: true, id: String(updated._id), status: updated.status });
   } catch (err) {

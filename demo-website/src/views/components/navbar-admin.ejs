@@ -9,10 +9,10 @@
       ? 'bg-[#7F2A00] text-white shadow-lg shadow-[#D97A54]/40'
       : 'text-[#CA3C25] hover:bg-[#FFE8DA] hover:text-[#8F2F00]';
 
-  const iconClasses = (href) =>
+  const iconClass = (href) =>
     isActive(href)
-      ? 'w-5 h-5 filter brightness-0 invert'
-      : 'w-5 h-5';
+      ? 'w-5 h-5 filter transition-[filter] duration-200 [filter:brightness(0)_invert(1)]'
+      : 'w-5 h-5 filter transition-[filter] duration-200 [filter:invert(37%)_sepia(80%)_saturate(1026%)_hue-rotate(350deg)_brightness(95%)_contrast(97%)]';
 
   const isAdmin = _me && _me.role === 'admin';
 %>
@@ -41,12 +41,12 @@
           
 
   <a href="/orders" class="flex items-center gap-2 rounded-full px-4 py-2 transition-colors duration-200 <%= navClasses('/orders') %>">
-    <img src="/asset/pic/Chef hat.svg" alt="Chef Hat" class="<%= iconClasses('/orders') %>">
+    <img src="/asset/pic/Chef hat.svg" alt="Chef Hat" class="<%= iconClass('/orders') %>">
     <span class="font-semibold">Order</span>
   </a>
 
   <a href="/Sales" class="flex items-center gap-2 rounded-full px-4 py-2 transition-colors duration-200 <%= navClasses('/Sales') %>">
-    <img src="/asset/pic/tackSale.svg" alt="tackSale" class="<%= iconClasses('/Sales') %>">
+    <img src="/asset/pic/tackSale.svg" alt="tackSale" class="<%= iconClass('/Sales') %>">
     <span class="font-semibold">Sales</span>
   </a>
 

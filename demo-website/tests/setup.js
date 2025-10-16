@@ -1,7 +1,7 @@
-import { createApp } from '../src/app.js';
-import { connect, disconnect } from '../src/db.js';
-import mongoose from 'mongoose';
-import { MongoMemoryServer } from 'mongodb-memory-server';
+import { createApp } from "../src/app.js";
+import { connect, disconnect } from "../src/db.js";
+import mongoose from "mongoose";
+import { MongoMemoryServer } from "mongodb-memory-server";
 
 let memoryServer;
 

@@ -6,7 +6,7 @@ const getByUsername = (name) => User.findOne({ name });
 const create = ({ name, password, phone, role }) => {
   const payload = { name, password };
   if (phone) payload.phone = phone;
-  const allowedRoles = ['customer', 'seller', 'admin'];
+  const allowedRoles = ["customer", "seller", "admin"];
   if (role && allowedRoles.includes(role)) {
     payload.role = role;
   }

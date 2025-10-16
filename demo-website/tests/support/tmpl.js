@@ -1,6 +1,6 @@
 function render(template, data = {}) {
   return String(template).replace(/\{\s*([^\s{}]+)\s*\}/g, (_, key) => {
-    return Object.prototype.hasOwnProperty.call(data, key) ? data[key] : '';
+    return Object.prototype.hasOwnProperty.call(data, key) ? data[key] : "";
   });
 }
 

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const SaleDetailSchema = new mongoose.Schema({
   category: { type: String, required: true },
@@ -28,4 +28,4 @@ const SaleSchema = new mongoose.Schema({
   details: [SaleDetailSchema],
 });
 
-module.exports = mongoose.model('Sale', SaleSchema);
+module.exports = mongoose.model("Sale", SaleSchema);

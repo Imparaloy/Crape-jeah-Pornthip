@@ -5,7 +5,7 @@ const CartCustomOptionSchema = new mongoose.Schema(
     name: { type: String, required: true },
     price: { type: Number, default: 0 },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const CartItemSchema = new mongoose.Schema(
@@ -23,13 +23,13 @@ const CartItemSchema = new mongoose.Schema(
       totalPrice: Number,
     },
   },
-  { _id: true }
+  { _id: true },
 );
 const CartSchema = new mongoose.Schema(
   {
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", index: true },
     items: { type: [CartItemSchema], default: [] },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 export default mongoose.model("Cart", CartSchema);

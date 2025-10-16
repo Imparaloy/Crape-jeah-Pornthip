@@ -12,7 +12,7 @@ const MenuSchema = new mongoose.Schema(
     available: { type: Boolean, default: true },
     categoryId: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 MenuSchema.index({ name: "text" });

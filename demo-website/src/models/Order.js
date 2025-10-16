@@ -6,11 +6,12 @@ const CounterSchema = new mongoose.Schema(
     _id: { type: String, required: true }, // sequence name, e.g. 'orderNumber'
     seq: { type: Number, default: 0 },
   },
-  { versionKey: false }
+  { versionKey: false },
 );
 
 // Reuse existing model if already compiled (helps during hot reloads)
-const Counter = mongoose.models.Counter || mongoose.model("Counter", CounterSchema);
+const Counter =
+  mongoose.models.Counter || mongoose.model("Counter", CounterSchema);
 
 const OrderToppingSchema = new mongoose.Schema(
   {
@@ -18,7 +19,7 @@ const OrderToppingSchema = new mongoose.Schema(
     nameSnap: { type: String, required: true },
     priceSnap: { type: Number, required: true, min: 0 },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const OrderItemSchema = new mongoose.Schema(
@@ -35,7 +36,7 @@ const OrderItemSchema = new mongoose.Schema(
     detailsSnap: { type: String },
     linePrice: { type: Number, required: true, min: 0 }, // คำนวณรวม
   },
-  { _id: false }
+  { _id: false },
 );
 
 const OrderSchema = new mongoose.Schema(
@@ -46,7 +47,7 @@ const OrderSchema = new mongoose.Schema(
       required: true,
     },
     sellerId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  orderNumber: { type: Number },
+    orderNumber: { type: Number },
     items: { type: [OrderItemSchema], default: [] },
     totalPrice: { type: Number, required: true, min: 0 },
     status: {
@@ -56,17 +57,20 @@ const OrderSchema = new mongoose.Schema(
     },
     note: String,
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Assign next sequence number on first save
 OrderSchema.pre("save", async function (next) {
   try {
-    if (this.isNew && (this.orderNumber === undefined || this.orderNumber === null)) {
+    if (
+      this.isNew &&
+      (this.orderNumber === undefined || this.orderNumber === null)
+    ) {
       const updated = await Counter.findByIdAndUpdate(
         "orderNumber",
         { $inc: { seq: 1 } },
-        { new: true, upsert: true }
+        { new: true, upsert: true },
       );
       this.orderNumber = updated.seq;
     }
@@ -82,6 +86,6 @@ OrderSchema.index({ status: 1, createdAt: -1 });
 // Ensure uniqueness only for documents that already have orderNumber
 OrderSchema.index(
   { orderNumber: 1 },
-  { unique: true, partialFilterExpression: { orderNumber: { $exists: true } } }
+  { unique: true, partialFilterExpression: { orderNumber: { $exists: true } } },
 );
 export default mongoose.models.Order || mongoose.model("Order", OrderSchema);

@@ -1,6 +1,6 @@
-import dotenv from 'dotenv';
-import { createApp } from './app.js';
-import { connect } from './db.js';
+import dotenv from "dotenv";
+import { createApp } from "./app.js";
+import { connect } from "./db.js";
 
 dotenv.config();
 
@@ -8,9 +8,9 @@ const port = process.env.PORT || 3000;
 
 try {
   await connect(process.env.DB_URL);
-  console.log('Connected to MongoDB successfully');
+  console.log("Connected to MongoDB successfully");
 } catch (error) {
-  console.error('Error connecting to MongoDB:', error);
+  console.error("Error connecting to MongoDB:", error);
   process.exit(1);
 }
 

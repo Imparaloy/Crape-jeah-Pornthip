@@ -2,10 +2,17 @@
   const _activePath = typeof activePath !== 'undefined' ? activePath : '';
   const _me = typeof me !== 'undefined' ? me : null;
 
-  const isActive = (href) =>
-    (_activePath || '').startsWith(href)
-      ? 'bg-[#FFF1EC] text-[#CA3C25]'
-      : 'text-white hover:text-yellow-200';
+  const isActive = (href) => (_activePath || '').startsWith(href);
+
+  const navClasses = (href) =>
+    isActive(href)
+      ? 'bg-[#7F2A00] text-white shadow-lg shadow-[#D97A54]/40'
+      : 'text-[#CA3C25] hover:bg-[#FFE8DA] hover:text-[#8F2F00]';
+
+  const iconClasses = (href) =>
+    isActive(href)
+      ? 'w-5 h-5 filter brightness-0 invert'
+      : 'w-5 h-5';
 
   const isAdmin = _me && _me.role === 'admin';
 %>
@@ -29,23 +36,22 @@
     </div>
 
   <div class="relative pr-2 z-10">
-    <div class="rounded-full border-2 border-amberFlame">
-    <div class="flex items-center gap-1 bg-white rounded-full px-1 py-1">
+    <div class="rounded-full bg-gradient-to-r from-[#F3D5C1] via-[#F3B284] to-[#CA3C25] p-[2px] shadow-[0_6px_14px_rgba(202,60,37,0.25)]">
+  <div class="flex items-center gap-1 bg-white rounded-full px-1 py-1">
           
-          <a href="/orders"
-          class="flex items-center gap-2 rounded-full bg-[#7E1D00] text-white px-4 py-2 shadow-sm">
-            <img src="/asset/pic/Chef hat.svg" alt="Chef Hat" class="w-5 h-5">
-            <span class="font-semibold">Order</span>
-          </a>
 
-          <a href="/Sales"
-             class="flex items-center gap-2 rounded-full text-[#CA3C25] hover:bg-[#FFF1EC] px-4 py-2">
-            <img src="/asset/pic/tackSale.svg" alt="tackSale" class="w-5 h-5">
-            <span class="font-semibold">Sales</span>
-          </a>
+  <a href="/orders" class="flex items-center gap-2 rounded-full px-4 py-2 transition-colors duration-200 <%= navClasses('/orders') %>">
+    <img src="/asset/pic/Chef hat.svg" alt="Chef Hat" class="<%= iconClasses('/orders') %>">
+    <span class="font-semibold">Order</span>
+  </a>
 
-          <button id="admin-logout"
-                  class="flex items-center gap-2 rounded-full text-[#CA3C25] hover:bg-[#FFF1EC] px-4 py-2">
+  <a href="/Sales" class="flex items-center gap-2 rounded-full px-4 py-2 transition-colors duration-200 <%= navClasses('/Sales') %>">
+    <img src="/asset/pic/tackSale.svg" alt="tackSale" class="<%= iconClasses('/Sales') %>">
+    <span class="font-semibold">Sales</span>
+  </a>
+
+    <button id="admin-logout"
+      class="flex items-center gap-2 rounded-full text-[#B03E1F] hover:bg-[#FFE8DA] hover:text-[#7F2A00] px-4 py-2 transition-colors duration-200">
             <span class="font-semibold">Logout</span>
           </button>
         </div>

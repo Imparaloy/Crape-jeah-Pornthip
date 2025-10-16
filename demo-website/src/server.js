@@ -8,6 +8,8 @@ import salesRouter from './routes/salesRoutes.js';
 import ordersAdminRouter from './routes/ordersAdminRoutes.js';
 import pageAuth from './middlewares/pageAuth.js';
 import cookieParser from 'cookie-parser';
+import swaggerUi from 'swagger-ui-express';
+import openapi from './docs/openapi.js';
 
 dotenv.config();
 
@@ -59,6 +61,10 @@ app.put('/orders/:id/status', pageAuth(['seller','admin']), (req, res, next) => 
 
 // Public API endpoints
 app.use('/api', router);
+
+// Swagger UI and spec
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(openapi));
+app.get('/api/openapi.json', (req, res) => res.json(openapi));
 
 app.get('/', async (req, res) => {
   try {
